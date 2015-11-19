@@ -144,4 +144,41 @@ CREATE TABLE store
 # Relationships
 ##################################
 
+DROP TABLE IF EXISTS `artists_of_songs`;
+CREATE TABLE artists_of_songs
+(
+	album_id INT NOT NULL,
+    track_name VARCHAR(70) NOT NULL,
+    artist_name VARCHAR(70),
+    
+    
+    CONSTRAINT
+		pk_album_id_track_name_artist_name
+    PRIMARY KEY ( album_id, track_name, artist_name ),
+    
+	CONSTRAINT
+		fk_artists_of_songs_song_album_id_track_name
+	FOREIGN KEY ( album_id, track_name )
+		REFERENCES general_song( album_id, track_name )
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+        
+	CONSTRAINT
+		fk_artists_of_songs_artist_artist_name
+	FOREIGN KEY ( artist_name )
+		REFERENCES artist( artist_name )
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+    
+) ENGINE = INNODB;
 
+CREATE TRIGGER tg_artists_of_songs_total_song_participation
+BEFORE INSERT ON general_song
+FOR EACH ROW
+  SET NEW.track_name = IF(
+    (
+      SELECT COUNT(*) FROM artists_of_songs WHERE track_name = NEW.track_name AND album_id = NEW.album_id
+    ) != 0,
+    NEW.track_name,
+    NULL
+  );
