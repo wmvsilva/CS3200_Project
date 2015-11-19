@@ -7,7 +7,7 @@ CS 3200
 MySQL Database Schema for Final Project
 */
 
-CREATE DATABASE  IF NOT EXISTS music /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE IF NOT EXISTS music /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE music;
 
 # Drops tables in reverse order they were added.
@@ -74,15 +74,16 @@ CREATE TABLE general_song
     # The name of the song
 	track_name VARCHAR(70) NOT NULL,
     # The entire lyrics of the song, including newlines
-    lyrics TEXT,
+    lyrics TEXT NULL,
     # Filepath to an audio file of a short sample of the song
-    audio_sample VARCHAR(512),
+    audio_sample VARCHAR(512) NULL,
     # The length of the song in seconds
-    length_seconds SMALLINT UNSIGNED,
+    length_seconds SMALLINT UNSIGNED NULL,
     # The associated album of this song
     album_id INT NOT NULL,
-    # The number of the track within the album
-    track_number TINYINT UNSIGNED,
+    # The number of the track within the album. Given our
+    # assumptions, there should always be a track number
+    track_number TINYINT UNSIGNED NOT NULL,
     
     # Auto_incremented field is used as primary key
     CONSTRAINT
@@ -120,9 +121,9 @@ CREATE TABLE single_song
     # general information
 	song_id INT NOT NULL,
     # The date that the single was released
-    release_date DATE,
+    release_date DATE NULL,
     # File path to an image file of the cover art for this single
-    cover_art VARCHAR(512),
+    cover_art VARCHAR(512) NULL,
     
     # Each row contains information pertaining to a unique song
     CONSTRAINT
@@ -133,7 +134,7 @@ CREATE TABLE single_song
     # If the general song information is updated/removed,
     # then this should also be updated/removed.
     CONSTRAINT
-		fk_single_song_general_song_track_name_album_id
+		fk_single_song_general_song_song_id
 	FOREIGN KEY ( song_id )
 		REFERENCES general_song( song_id )
         ON DELETE CASCADE
@@ -149,11 +150,11 @@ CREATE TABLE single_song
 CREATE TABLE artist
 (
 	# The stage name of the artist
-	artist_name VARCHAR(70),
+	artist_name VARCHAR(70) NOT NULL,
     
     # The stage name of the artist is assumed to be unique.
     CONSTRAINT
-		pk_artist_name
+		pk_artist_artist_name
     PRIMARY KEY ( artist_name)
     
 ) ENGINE = INNODB;
@@ -170,7 +171,7 @@ CREATE TABLE genre
     
     # Each genre is represented once in the table
     CONSTRAINT
-		pk_genre_name
+		pk_genre_genre_name
     PRIMARY KEY ( genre_name )
     
 ) ENGINE = INNODB;
@@ -186,7 +187,7 @@ CREATE TABLE music_format
     
     # Each distribution format has a unique name
     CONSTRAINT
-		pk_format_name
+		pk_music_format_format_name
     PRIMARY KEY ( format_name)
     
 ) ENGINE = INNODB;
@@ -203,7 +204,7 @@ CREATE TABLE store
     
     # Each name of a company is unique
     CONSTRAINT
-		pk_store_name
+		pk_store_store_name
     PRIMARY KEY ( store_name)
     
 ) ENGINE = INNODB;
@@ -227,19 +228,19 @@ CREATE TABLE artists_of_songs
 	# The id of a song
 	song_id INT NOT NULL,
     # The name of the artist who authored the song
-    artist_name VARCHAR(70),
+    artist_name VARCHAR(70) NOT NULL,
     
     # Each song can have many artists and each artist can have
     # many songs
     CONSTRAINT
-		pk_song_id_artist_name
+		pk_artists_of_songs_song_id_artist_name
     PRIMARY KEY ( song_id, artist_name ),
     
     # References song table
     # If songs are updated/deleted, information about
     # who wrote them should also be updated/deleted.
 	CONSTRAINT
-		fk_artists_of_songs_general_song
+		fk_artists_of_songs_general_song_song_id
 	FOREIGN KEY ( song_id )
 		REFERENCES general_song( song_id )
         ON DELETE CASCADE
@@ -278,14 +279,14 @@ CREATE TABLE featured_artists_of_songs
     # Song can have many ft artists and ft artists can be in
     # many songs
     CONSTRAINT
-		pk_song_id_artist_name
+		pk_featured_artists_of_songs_song_id_ft_artist_name
     PRIMARY KEY ( song_id, featured_artist_name ),
     
     # References general_song table
     # If a song is updated/deleted, we should also
     # update the information here or delete it.
 	CONSTRAINT
-		fk_featured_artists_of_songs_general_song
+		fk_featured_artists_of_songs_general_song_song_id
 	FOREIGN KEY ( song_id )
 		REFERENCES general_song( song_id )
         ON DELETE CASCADE
@@ -295,7 +296,7 @@ CREATE TABLE featured_artists_of_songs
     # If an artist is updated/deleted, changes
     # should be reflected here.
 	CONSTRAINT
-		fk_featured_artists_of_songs_artist_artist_name
+		fk_featured_artists_of_songs_artist_ft_artist_name
 	FOREIGN KEY ( featured_artist_name )
 		REFERENCES artist( artist_name )
         ON DELETE CASCADE
@@ -320,14 +321,14 @@ CREATE TABLE genre_of_song
     
     # Each song can have many genres and each genre can have many songs
     CONSTRAINT
-		pk_song_id_genre_name
+		pk_genre_of_song_song_id_genre_name
     PRIMARY KEY ( song_id, genre_name ),
     
     # References song table
     # If a song is updated/deleted, all related information about
     # that song should also receive these changes
 	CONSTRAINT
-		fk_genre_of_song_general_song
+		fk_genre_of_song_general_song_song_id
 	FOREIGN KEY ( song_id )
 		REFERENCES general_song( song_id )
         ON DELETE CASCADE
@@ -360,12 +361,12 @@ CREATE TABLE artists_of_albums
 	# The id of the album
 	album_id INT NOT NULL,
     # The name of the artist who create the album
-    artist_name VARCHAR(70),
+    artist_name VARCHAR(70) NOT NULL,
     
     # Each artist can have multiple albums and each album
     # can have multiple artists
     CONSTRAINT
-		pk_album_id_artist_name
+		pk_artists_of_albums_album_id_artist_name
     PRIMARY KEY ( album_id, artist_name ),
     
     # References album table
@@ -409,14 +410,14 @@ CREATE TABLE genre_of_album
     
     # An album can have many genres and a genre can have many albums
     CONSTRAINT
-		pk_album_id_genre_name
+		pk_genre_of_album_album_id_genre_name
     PRIMARY KEY ( album_id, genre_name ),
     
     # References album table
     # If an album is updated/deleted, information about the genre
     # of the album should get these changes.
 	CONSTRAINT
-		fk_genre_of_album_album_id
+		fk_genre_of_album_album_album_id
 	FOREIGN KEY ( album_id )
 		REFERENCES album( album_id )
         ON DELETE CASCADE
@@ -465,7 +466,7 @@ CREATE TABLE format_of_album
     # is distributed should be updated/deleted
     # as well
 	CONSTRAINT
-		fk_format_of_album_album_id
+		fk_format_of_album_album__album_id
 	FOREIGN KEY ( album_id )
 		REFERENCES album( album_id )
         ON DELETE CASCADE
@@ -475,7 +476,7 @@ CREATE TABLE format_of_album
     # If information about a music_format is updated/deleted,
     # it should be updated/deleted here as well.
 	CONSTRAINT
-		fk_format_of_album_format_format_name
+		fk_format_of_album_music_format_format_name
 	FOREIGN KEY ( format_name )
 		REFERENCES music_format( format_name )
         ON DELETE CASCADE
