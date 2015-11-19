@@ -7,9 +7,13 @@ CS 3200
 MySQL Database Schema for Final Project
 */
 
+DROP DATABASE IF EXISTS `music`;
 CREATE DATABASE  IF NOT EXISTS `music` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `music`;
 
+######################################
+# Entities
+######################################
 
 DROP TABLE IF EXISTS `album`;
 CREATE TABLE album
@@ -51,6 +55,47 @@ CREATE TABLE general_song
         
 ) ENGINE = INNODB;
 
+DROP TABLE IF EXISTS `single_song`;
+CREATE TABLE single_song
+(
+	track_name VARCHAR(70) NOT NULL,
+    album_id INT NOT NULL,
+    release_date DATE,
+    cover_art VARCHAR(512),
+    
+    CONSTRAINT
+		pk_single_song_track_name_album_id
+	PRIMARY KEY ( track_name, album_id ),
+    
+    CONSTRAINT
+		fk_single_song_general_song_track_name_album_id
+	FOREIGN KEY ( album_id, track_name )
+		REFERENCES general_song( album_id, track_name )
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+        
+) ENGINE = INNODB;
+
+DROP TABLE IF EXISTS `album_song`;
+CREATE TABLE album_song
+(
+	track_name VARCHAR(70) NOT NULL,
+    album_id INT NOT NULL,
+    track_number TINYINT UNSIGNED,
+    
+    CONSTRAINT
+		pk_album_song_track_name_album_id
+	PRIMARY KEY ( track_name, album_id ),
+    
+    CONSTRAINT
+		fk_album_song_general_song_track_name_album_id
+	FOREIGN KEY ( album_id, track_name )
+		REFERENCES general_song( album_id, track_name )
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+        
+) ENGINE = INNODB;
+
 DROP TABLE IF EXISTS `artist`;
 CREATE TABLE artist
 (
@@ -62,13 +107,41 @@ CREATE TABLE artist
     
 ) ENGINE = INNODB;
 
+DROP TABLE IF EXISTS `genre`;
+CREATE TABLE genre
+(
+	genre_name VARCHAR(70) NOT NULL,
+    
+    CONSTRAINT
+		pk_genre_name
+    PRIMARY KEY ( genre_name )
+    
+) ENGINE = INNODB;
+
 DROP TABLE IF EXISTS `music_format`;
 CREATE TABLE music_format
 (
-	format_name VARCHAR(70),
+	format_name VARCHAR(70) NOT NULL,
     
     CONSTRAINT
 		pk_format_name
     PRIMARY KEY ( format_name)
     
 ) ENGINE = INNODB;
+
+DROP TABLE IF EXISTS `store`;
+CREATE TABLE store
+(
+	store_name VARCHAR(70) NOT NULL,
+    
+    CONSTRAINT
+		pk_store_name
+    PRIMARY KEY ( store_name)
+    
+) ENGINE = INNODB;
+
+##################################
+# Relationships
+##################################
+
+
