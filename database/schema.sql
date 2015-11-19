@@ -11,21 +11,21 @@ CREATE DATABASE  IF NOT EXISTS music /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE music;
 
 # Drops tables in reverse order they were added.
-DROP TABLE IF EXISTS `store_catalog`;
-DROP TABLE IF EXISTS `format_of_album`;
-DROP TABLE IF EXISTS `genre_of_album`;
-DROP TABLE IF EXISTS `artists_of_albums`;
-DROP TABLE IF EXISTS `genre_of_song`;
-DROP TABLE IF EXISTS `featured_artists_of_songs`;
-DROP TABLE IF EXISTS `artists_of_songs`;
-DROP TABLE IF EXISTS `store`;
-DROP TABLE IF EXISTS `music_format`;
-DROP TABLE IF EXISTS `genre`;
-DROP TABLE IF EXISTS `artist`;
-DROP TABLE IF EXISTS `album_song`;
-DROP TABLE IF EXISTS `single_song`;
-DROP TABLE IF EXISTS `general_song`;
-DROP TABLE IF EXISTS `album`;
+DROP TABLE IF EXISTS store_catalog;
+DROP TABLE IF EXISTS format_of_album;
+DROP TABLE IF EXISTS genre_of_album;
+DROP TABLE IF EXISTS artists_of_albums;
+DROP TABLE IF EXISTS genre_of_song;
+DROP TABLE IF EXISTS featured_artists_of_songs;
+DROP TABLE IF EXISTS artists_of_songs;
+DROP TABLE IF EXISTS store;
+DROP TABLE IF EXISTS music_format;
+DROP TABLE IF EXISTS genre;
+DROP TABLE IF EXISTS artist;
+DROP TABLE IF EXISTS album_song;
+DROP TABLE IF EXISTS single_song;
+DROP TABLE IF EXISTS general_song;
+DROP TABLE IF EXISTS album;
 
 ######################################
 ######################################
