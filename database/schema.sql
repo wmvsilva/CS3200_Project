@@ -7,9 +7,25 @@ CS 3200
 MySQL Database Schema for Final Project
 */
 
-DROP DATABASE IF EXISTS music;
 CREATE DATABASE  IF NOT EXISTS music /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE music;
+
+# Drops tables in reverse order they were added.
+DROP TABLE IF EXISTS `store_catalog`;
+DROP TABLE IF EXISTS `format_of_album`;
+DROP TABLE IF EXISTS `genre_of_album`;
+DROP TABLE IF EXISTS `artists_of_albums`;
+DROP TABLE IF EXISTS `genre_of_song`;
+DROP TABLE IF EXISTS `featured_artists_of_songs`;
+DROP TABLE IF EXISTS `artists_of_songs`;
+DROP TABLE IF EXISTS `store`;
+DROP TABLE IF EXISTS `music_format`;
+DROP TABLE IF EXISTS `genre`;
+DROP TABLE IF EXISTS `artist`;
+DROP TABLE IF EXISTS `album_song`;
+DROP TABLE IF EXISTS `single_song`;
+DROP TABLE IF EXISTS `general_song`;
+DROP TABLE IF EXISTS `album`;
 
 ######################################
 ######################################
@@ -20,7 +36,6 @@ USE music;
 /*
  * album table contains music album attributes
  */
-DROP TABLE IF EXISTS album;
 CREATE TABLE album
 (
 	# album_id is a generated primary key. It is used rather than the composite
@@ -51,7 +66,6 @@ CREATE TABLE album
  * table. It contains all general information about a
  * song.
  */
-DROP TABLE IF EXISTS general_song;
 CREATE TABLE general_song
 (
 	# Auto_generated field to be used as a primary key rather than
@@ -100,7 +114,6 @@ CREATE TABLE general_song
  * table. It contains all information that is specific to a song
  * released as a single.
  */
-DROP TABLE IF EXISTS `single_song`;
 CREATE TABLE single_song
 (
 	# Reference to the general_song table that provides more
@@ -133,7 +146,6 @@ CREATE TABLE single_song
  * songs. Currently, this is just limited to the name but a larger project
  * could include complete biographical information.
  */
-DROP TABLE IF EXISTS `artist`;
 CREATE TABLE artist
 (
 	# The stage name of the artist
@@ -151,7 +163,6 @@ CREATE TABLE artist
  * just contains the name of the genre but a larger project could include
  * genre history, related genres, etc.
  */
-DROP TABLE IF EXISTS `genre`;
 CREATE TABLE genre
 (
 	# The most common name of the genre
@@ -168,7 +179,6 @@ CREATE TABLE genre
  * music_format table contains information about the distribution format of
  * albums. Examples include digitial, CD, record, etc.
  */
-DROP TABLE IF EXISTS `music_format`;
 CREATE TABLE music_format
 (
 	# The most common name of the distribution format
@@ -186,7 +196,6 @@ CREATE TABLE music_format
  * If this project were expanded, this table would definitely include
  * more fields such as store logo, link to store, etc.
  */
-DROP TABLE IF EXISTS `store`;
 CREATE TABLE store
 (
 	# The company name
@@ -213,7 +222,6 @@ CREATE TABLE store
  * on the 'many' side of a relationship is not possible.
  * Therefore, it is up to the user/application to enforce this.
  */
-DROP TABLE IF EXISTS `artists_of_songs`;
 CREATE TABLE artists_of_songs
 (
 	# The id of a song
@@ -260,7 +268,6 @@ CREATE TABLE artists_of_songs
  * Songs can have many featured artists and featured artists
  * can have many songs.
  */
-DROP TABLE IF EXISTS `featured_artists_of_songs`;
 CREATE TABLE featured_artists_of_songs
 (
 	# The song with a featured artist
@@ -304,7 +311,6 @@ CREATE TABLE featured_artists_of_songs
  * MySQL due to its limitations. It is up to the user/application
  * to enforce this.
  */
-DROP TABLE IF EXISTS `genre_of_song`;
 CREATE TABLE genre_of_song
 (
 	# The id of the song
@@ -349,7 +355,6 @@ CREATE TABLE genre_of_song
  * Each album should have at least one artist but this cannot be enforced
  * MySQL and is therefore up to the user/application.
  */
-DROP TABLE IF EXISTS `artists_of_albums`;
 CREATE TABLE artists_of_albums
 (
 	# The id of the album
@@ -395,7 +400,6 @@ CREATE TABLE artists_of_albums
  * Note that an album should have at least one genre. This cannot be
  * enforced by MySQL and is up to the user/application to enforce.
  */
-DROP TABLE IF EXISTS `genre_of_album`;
 CREATE TABLE genre_of_album
 (
 	# The id of the album
@@ -436,7 +440,6 @@ CREATE TABLE genre_of_album
  * one format and it is up to the user/application to enforce
  * this.
  */
-DROP TABLE IF EXISTS `format_of_album`;
 CREATE TABLE format_of_album
 (
 	# Auto_generated field to act as a primary key so that
@@ -486,7 +489,6 @@ CREATE TABLE format_of_album
  * but enhancements to this project could include processing time,
  * link to price, reviews, etc.
  */
-DROP TABLE IF EXISTS `store_catalog`;
 CREATE TABLE store_catalog
 (
 	# The name of the store selling the album
