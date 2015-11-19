@@ -81,13 +81,16 @@ CREATE TABLE general_song
 	UNIQUE KEY ( track_name, album_id ),
     
     # album_id refers to the album table
-    # If the album is updated or removed, the
-    # song should also be updated/removed.
+    # If the album is updated, the reference should also
+    # be updated.
+    # Album deletion is restricted to prevent data loss of
+    # songs. One should delete all songs in an album before
+    # they delete the album.
     CONSTRAINT
 		fk_general_song_album_album_id
     FOREIGN KEY ( album_id)
 		REFERENCES album(album_id)
-        ON DELETE CASCADE
+        ON DELETE RESTRICT
         ON UPDATE CASCADE
         
 ) ENGINE = INNODB;
@@ -254,6 +257,8 @@ CREATE TABLE artists_of_songs
  * 'Daft Punk - Get Lucky ft. Pharrell Williams' features
  * Pharrel Williams so this table would contain a reference
  * to Get Lucky and Pharrel Williams.
+ * Songs can have many featured artists and featured artists
+ * can have many songs.
  */
 DROP TABLE IF EXISTS `featured_artists_of_songs`;
 CREATE TABLE featured_artists_of_songs
@@ -263,18 +268,25 @@ CREATE TABLE featured_artists_of_songs
     # Name of the featured artist
     featured_artist_name VARCHAR(70) NOT NULL,
     
-    
+    # Song can have many ft artists and ft artists can be in
+    # many songs
     CONSTRAINT
 		pk_song_id_artist_name
     PRIMARY KEY ( song_id, featured_artist_name ),
     
+    # References general_song table
+    # If a song is updated/deleted, we should also
+    # update the information here or delete it.
 	CONSTRAINT
 		fk_featured_artists_of_songs_general_song
 	FOREIGN KEY ( song_id )
 		REFERENCES general_song( song_id )
         ON DELETE CASCADE
         ON UPDATE CASCADE,
-      
+
+	# References artist table
+    # If an artist is updated/deleted, changes
+    # should be reflected here.
 	CONSTRAINT
 		fk_featured_artists_of_songs_artist_artist_name
 	FOREIGN KEY ( featured_artist_name )
@@ -284,24 +296,40 @@ CREATE TABLE featured_artists_of_songs
     
 ) ENGINE = INNODB;
 
+/*
+ * genre_of_song table contains the information about which songs
+ * have what genres. This is a many-to-many relationship as songs
+ * can have many genres and genres can have many songs. Songs
+ * should have at least one genre but this cannot be enforced using
+ * MySQL due to its limitations. It is up to the user/application
+ * to enforce this.
+ */
 DROP TABLE IF EXISTS `genre_of_song`;
 CREATE TABLE genre_of_song
 (
+	# The id of the song
 	song_id INT NOT NULL,
+    # The name of the genre
     genre_name VARCHAR(70) NOT NULL,
     
-    
+    # Each song can have many genres and each genre can have many songs
     CONSTRAINT
 		pk_song_id_genre_name
     PRIMARY KEY ( song_id, genre_name ),
     
+    # References song table
+    # If a song is updated/deleted, all related information about
+    # that song should also receive these changes
 	CONSTRAINT
 		fk_genre_of_song_general_song
 	FOREIGN KEY ( song_id )
 		REFERENCES general_song( song_id )
         ON DELETE CASCADE
         ON UPDATE CASCADE,
-        
+	
+    # References song table
+    # If a genre is updated/deleted, this information change
+    # should cascade to all related data.
 	CONSTRAINT
 		fk_genre_of_song_genre_genre_name
 	FOREIGN KEY ( genre_name )
@@ -311,24 +339,43 @@ CREATE TABLE genre_of_song
     
 ) ENGINE = INNODB;
 
+/*
+ * artists_of_albums table contains which albums have which artists.
+ * This is a separate table from the artists_of_songs table because
+ * the artist(s) of a full album are often different than the artists
+ * of the tracks within it.
+ * This is a many-to-many relationship as each artist can have multiple
+ * albums and each album can have multiple artists.
+ * Each album should have at least one artist but this cannot be enforced
+ * MySQL and is therefore up to the user/application.
+ */
 DROP TABLE IF EXISTS `artists_of_albums`;
 CREATE TABLE artists_of_albums
 (
+	# The id of the album
 	album_id INT NOT NULL,
+    # The name of the artist who create the album
     artist_name VARCHAR(70),
     
-    
+    # Each artist can have multiple albums and each album
+    # can have multiple artists
     CONSTRAINT
 		pk_album_id_artist_name
     PRIMARY KEY ( album_id, artist_name ),
     
+    # References album table
+    # If an album is deleted/updated, information about
+    # who wrote it should get these changes.
 	CONSTRAINT
 		fk_artists_of_albums_album_album_id
 	FOREIGN KEY ( album_id )
 		REFERENCES album( album_id )
         ON DELETE CASCADE
         ON UPDATE CASCADE,
-        
+	
+    # References artist table
+    # If an artist is updated/deleted, information about
+    # what albums he or she made should get the changes.
 	CONSTRAINT
 		fk_artists_of_albumss_artist_artist_name
 	FOREIGN KEY ( artist_name )
@@ -338,24 +385,42 @@ CREATE TABLE artists_of_albums
     
 ) ENGINE = INNODB;
 
+/*
+ * genre_of_album table contains information about which albums have
+ * what genres. This included in addition to the genre_of_song table
+ * because the genre of an entire album is usually more broad than
+ * the genres of the individual songs within an album
+ * This is a many-to-many relationship as albums can have many genres
+ * and genres can have many albums.
+ * Note that an album should have at least one genre. This cannot be
+ * enforced by MySQL and is up to the user/application to enforce.
+ */
 DROP TABLE IF EXISTS `genre_of_album`;
 CREATE TABLE genre_of_album
 (
+	# The id of the album
 	album_id INT NOT NULL,
+    # The name of a genre of the album
     genre_name VARCHAR(70) NOT NULL,
     
-    
+    # An album can have many genres and a genre can have many albums
     CONSTRAINT
 		pk_album_id_genre_name
     PRIMARY KEY ( album_id, genre_name ),
     
+    # References album table
+    # If an album is updated/deleted, information about the genre
+    # of the album should get these changes.
 	CONSTRAINT
 		fk_genre_of_album_album_id
 	FOREIGN KEY ( album_id )
 		REFERENCES album( album_id )
         ON DELETE CASCADE
         ON UPDATE CASCADE,
-        
+	
+    # References genre table
+    # If a genre is updated/deleted, all references to it should
+    # also be updated/removed.
 	CONSTRAINT
 		fk_genre_of_album_genre_genre_name
 	FOREIGN KEY ( genre_name )
@@ -365,28 +430,47 @@ CREATE TABLE genre_of_album
     
 ) ENGINE = INNODB;
 
+/*
+ * format_of_album table describes what formats albums can be
+ * distributed in. An album should be distributed in at least
+ * one format and it is up to the user/application to enforce
+ * this.
+ */
 DROP TABLE IF EXISTS `format_of_album`;
 CREATE TABLE format_of_album
 (
+	# Auto_generated field to act as a primary key so that
+    # tables referring to this only need to have one column
 	distribution_id INT NOT NULL AUTO_INCREMENT,
+    # The id of the album
 	album_id INT NOT NULL,
+    # The name of the format that the album is distributed in
     format_name VARCHAR(70) NOT NULL,
     
+    # Autogenerated primary key
     CONSTRAINT
 		pk_format_of_album_distribution_id
     PRIMARY KEY ( distribution_id ),
     
+    # Album id and format name are a composite key
 	CONSTRAINT
 		uk_format_of_album_album_id_format_name
 	UNIQUE KEY ( album_id, format_name ),
     
+    # References album table
+    # If an album is updated/deleted, the way it
+    # is distributed should be updated/deleted
+    # as well
 	CONSTRAINT
 		fk_format_of_album_album_id
 	FOREIGN KEY ( album_id )
 		REFERENCES album( album_id )
         ON DELETE CASCADE
         ON UPDATE CASCADE,
-        
+	
+    # References music_format table
+    # If information about a music_format is updated/deleted,
+    # it should be updated/deleted here as well.
 	CONSTRAINT
 		fk_format_of_album_format_format_name
 	FOREIGN KEY ( format_name )
@@ -396,24 +480,41 @@ CREATE TABLE format_of_album
     
 ) ENGINE = INNODB;
 
+/*
+ * store_catalog table describes a catalog of a store selling albums
+ * at given prices. Currently, this only contains the price information
+ * but enhancements to this project could include processing time,
+ * link to price, reviews, etc.
+ */
 DROP TABLE IF EXISTS `store_catalog`;
 CREATE TABLE store_catalog
 (
+	# The name of the store selling the album
 	store_name VARCHAR(70) NOT NULL,
+    # The format of the album being sold
 	distribution_id INT NOT NULL,
+    # The price of the album
     album_price DECIMAL(10, 2) NOT NULL,
     
+    # Each store sells can sell many albums but for each album,
+    # it only sells an album at one price
     CONSTRAINT
-		pk_store_catalog_store_name_distribution_id_album_price
-    PRIMARY KEY ( store_name, distribution_id, album_price ),
+		pk_store_catalog_store_name_distribution_id
+    PRIMARY KEY ( store_name, distribution_id ),
     
+    # References store table
+    # If a store is updated/deleted, all information
+    # about that store should be cascaded.
 	CONSTRAINT
 		fk_store_catalog_store_store_name
 	FOREIGN KEY ( store_name )
 		REFERENCES store( store_name )
         ON DELETE CASCADE
         ON UPDATE CASCADE,
-        
+	
+    # References format_of_album table
+    # If a distribution is updated/deleted, all information
+    # should be cascaded.
 	CONSTRAINT
 		fk_store_catalog_format_of_album_distribution_id
 	FOREIGN KEY ( distribution_id )
