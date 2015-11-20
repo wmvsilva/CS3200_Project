@@ -212,3 +212,5 @@ insert into format_of_album(distribution_id,album_id,format_name)
 	values (4,2,'mp3');
 insert into format_of_album(distribution_id,album_id,format_name)
 	values (5,2,'audio cd');
+insert into store_catalog(store_name,distribution_id,album_price)
+	values ('Amazon',1,12.49);
