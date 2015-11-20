@@ -84,6 +84,10 @@ insert into genre(genre_name)
 	values ('R&B');
 insert into genre(genre_name)
 	values ('trap');
+insert into genre(genre_name)
+	values ('pop rock');
+insert into genre(genre_name)
+	values ('holiday');
 insert into music_format(format_name)
 	values ('mp3');
 insert into music_format(format_name)
@@ -112,3 +116,19 @@ insert into artists_of_songs(song_id,artist_name)
 	values (6,'Adele');
 insert into featured_artists_of_songs(song_id,featured_artist_name)
 	values (7,'Usher');
+insert into genre_of_song(song_id,genre_name)
+	values (1,'pop');
+insert into genre_of_song(song_id,genre_name)
+	values (1,'hip hop');
+insert into genre_of_song(song_id,genre_name)
+	values (2,'electropop');
+insert into genre_of_song(song_id,genre_name)
+	values (3,'pop');
+insert into genre_of_song(song_id,genre_name)
+	values (4,'hard rock');
+insert into genre_of_song(song_id,genre_name)
+	values (5,'arena rock');
+insert into genre_of_song(song_id,genre_name)
+	values (6,'pop rock');
+insert into genre_of_song(song_id,genre_name)
+	values (7, 'holiday');
