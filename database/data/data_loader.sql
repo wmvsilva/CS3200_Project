@@ -30,6 +30,14 @@ insert into general_song(song_id,track_name,lyrics,audio_sample,length_seconds,a
 	values (5,'We Will Rock You','Queen_-_We_Will_Rock_You.txt','Queen_-_We_Will_Rock_You.mp3',122,4,1);
 insert into general_song(song_id,track_name,lyrics,audio_sample,length_seconds,album_id,track_number)
 	values (6,'One and Only','Adele_-_One_and_Only.txt','Adele_-_One_and_Only.mp3',348,7,9);
+insert into single_song(song_id,release_date,cover_art)
+	values (1,'2015-05-17','Taylor_Swift_-_Bad_Blood.png');
+insert into single_song(song_id,release_date,cover_art)
+	values (2,'2014-11-10','Taylor_Swift_-_Blank_Space.png');
+insert into single_song(song_id,release_date,cover_art)
+	values (4,'1969-12-05',NULL);
+insert into single_song(song_id,release_date,cover_art)
+	values (5,'1977-10-07','Queen_-_We_Will_Rock_You.png');
 insert into artist(artist_name)
 	values ('Taylor Swift');
 insert into artist(artist_name)
