@@ -90,6 +90,8 @@ insert into genre(genre_name)
 	values ('pop rock');
 insert into genre(genre_name)
 	values ('holiday');
+insert into genre(genre_name)
+	values ('teen pop');
 insert into music_format(format_name)
 	values ('mp3');
 insert into music_format(format_name)
@@ -158,3 +160,45 @@ insert into artists_of_albums(album_id,artist_name)
 	values (10,'Drake');
 insert into artists_of_albums(album_id,artist_name)
 	values (11,'Justin Bieber');
+insert into genre_of_album(album_id,genre_name)
+	values (1,'pop');
+insert into genre_of_album(album_id,genre_name)
+	values (1,'dance-pop');
+insert into genre_of_album(album_id,genre_name)
+	values (1,'synthpop');
+insert into genre_of_album(album_id,genre_name)
+	values (2,'pop');
+insert into genre_of_album(album_id,genre_name)
+	values (3,'hard rock');
+insert into genre_of_album(album_id,genre_name)
+	values (3,'blues');
+insert into genre_of_album(album_id,genre_name)
+	values (3,'country blues');
+insert into genre_of_album(album_id,genre_name)
+	values (4,'arena rock');
+insert into genre_of_album(album_id,genre_name)
+	values (4,'rock');
+insert into genre_of_album(album_id,genre_name)
+	values (5,'rock');
+insert into genre_of_album(album_id,genre_name)
+	values (6,'electropop');
+insert into genre_of_album(album_id,genre_name)
+	values (7,'soul');
+insert into genre_of_album(album_id,genre_name)
+	values (7,'pop');
+insert into genre_of_album(album_id,genre_name)
+	values (7,'R&B');
+insert into genre_of_album(album_id,genre_name)
+	values (8,'soul');
+insert into genre_of_album(album_id,genre_name)
+	values (9,'hip hop');
+insert into genre_of_album(album_id,genre_name)
+	values (9,'trap');
+insert into genre_of_album(album_id,genre_name)
+	values (10,'hip hop');
+insert into genre_of_album(album_id,genre_name)
+	values (11,'teen pop');
+insert into genre_of_album(album_id,genre_name)
+	values (11,'R&B');
+insert into genre_of_album(album_id,genre_name)
+	values (11,'holiday');
