@@ -18,6 +18,8 @@ insert into album(album_id,album_name,release_date,album_cover)
 	values ('9','What a Time to Be Alive','2015-09-20','Drake_Future_-_What_a_Time_to_Be_Alive.png');
 insert into album(album_id,album_name,release_date,album_cover)
 	values ('10','Nothing Was the Same','2013-09-23','Drake_-_Nothing_Was_the_Same.png');
+insert into album(album_id,album_name,release_date,album_cover)
+	values ('11','Under the Mistletoe','2011-11-01','Justin_Bieber_-_Under_the_Mistletoe.png');
 insert into general_song(song_id,track_name,lyrics,audio_sample,length_seconds,album_id,track_number)
 	values (1,'Bad Blood','Taylor_Swift_-_Bad_Blood.txt','Taylor_Swift_-_Bad_Blood.mp3',211,1,8);
 insert into general_song(song_id,track_name,lyrics,audio_sample,length_seconds,album_id,track_number)
@@ -30,6 +32,8 @@ insert into general_song(song_id,track_name,lyrics,audio_sample,length_seconds,a
 	values (5,'We Will Rock You','Queen_-_We_Will_Rock_You.txt','Queen_-_We_Will_Rock_You.mp3',122,4,1);
 insert into general_song(song_id,track_name,lyrics,audio_sample,length_seconds,album_id,track_number)
 	values (6,'One and Only','Adele_-_One_and_Only.txt','Adele_-_One_and_Only.mp3',348,7,9);
+insert into general_song(song_id,track_name,lyrics,audio_sample,length_seconds,album_id,track_number)
+	values (7,'The Christmas Song (Chestnuts Roasting on an Open Fire)','Justin_Bieber_-_The_Christmas_Song.txt','Justin_Bieber_-_The_Christmas_Song.mp3',215,11,3);
 insert into single_song(song_id,release_date,cover_art)
 	values (1,'2015-05-17','Taylor_Swift_-_Bad_Blood.png');
 insert into single_song(song_id,release_date,cover_art)
@@ -52,6 +56,8 @@ insert into artist(artist_name)
 	values ('Drake');
 insert into artist(artist_name)
 	values ('Future');
+insert into artist(artist_name)
+	values ('Usher');
 insert into genre(genre_name)
 	values ('pop');
 insert into genre(genre_name)
@@ -104,3 +110,5 @@ insert into artists_of_songs(song_id,artist_name)
 	values (5,'Queen');
 insert into artists_of_songs(song_id,artist_name)
 	values (6,'Adele');
+insert into featured_artists_of_songs(song_id,featured_artist_name)
+	values (7,'Usher');

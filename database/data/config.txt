@@ -6,3 +6,4 @@
 ./music_format.csv
 ./store.csv
 ./relationships/artists_of_songs.csv
+./relationships/featured_artists_of_songs.csv
