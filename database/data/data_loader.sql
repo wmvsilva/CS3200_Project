@@ -58,6 +58,8 @@ insert into artist(artist_name)
 	values ('Future');
 insert into artist(artist_name)
 	values ('Usher');
+insert into artist(artist_name)
+	values ('Justin Bieber');
 insert into genre(genre_name)
 	values ('pop');
 insert into genre(genre_name)
@@ -132,3 +134,27 @@ insert into genre_of_song(song_id,genre_name)
 	values (6,'pop rock');
 insert into genre_of_song(song_id,genre_name)
 	values (7, 'holiday');
+insert into artists_of_albums(album_id,artist_name)
+	values (1,'Taylor Swift');
+insert into artists_of_albums(album_id,artist_name)
+	values (2,'Taylor Swift');
+insert into artists_of_albums(album_id,artist_name)
+	values (3,'The Rolling Stones');
+insert into artists_of_albums(album_id,artist_name)
+	values (4,'Queen');
+insert into artists_of_albums(album_id,artist_name)
+	values (5,'Queen');
+insert into artists_of_albums(album_id,artist_name)
+	values (6,'Sia');
+insert into artists_of_albums(album_id,artist_name)
+	values (7,'Adele');
+insert into artists_of_albums(album_id,artist_name)
+	values (8,'Adele');
+insert into artists_of_albums(album_id,artist_name)
+	values (9,'Drake');
+insert into artists_of_albums(album_id,artist_name)
+	values (9,'Future');
+insert into artists_of_albums(album_id,artist_name)
+	values (10,'Drake');
+insert into artists_of_albums(album_id,artist_name)
+	values (11,'Justin Bieber');

@@ -8,3 +8,4 @@
 ./relationships/artists_of_songs.csv
 ./relationships/featured_artists_of_songs.csv
 ./relationships/genre_of_song.csv
+./relationships/artists_of_albums.csv
