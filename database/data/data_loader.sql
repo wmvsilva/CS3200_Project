@@ -202,3 +202,13 @@ insert into genre_of_album(album_id,genre_name)
 	values (11,'R&B');
 insert into genre_of_album(album_id,genre_name)
 	values (11,'holiday');
+insert into format_of_album(distribution_id,album_id,format_name)
+	values (1,1,'mp3');
+insert into format_of_album(distribution_id,album_id,format_name)
+	values (2,1,'audio cd');
+insert into format_of_album(distribution_id,album_id,format_name)
+	values (3,1,'vinyl');
+insert into format_of_album(distribution_id,album_id,format_name)
+	values (4,2,'mp3');
+insert into format_of_album(distribution_id,album_id,format_name)
+	values (5,2,'audio cd');

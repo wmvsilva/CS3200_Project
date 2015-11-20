@@ -10,3 +10,4 @@
 ./relationships/genre_of_song.csv
 ./relationships/artists_of_albums.csv
 ./relationships/genre_of_album.csv
+./relationships/format_of_album.csv
