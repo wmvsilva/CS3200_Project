@@ -1,0 +1,7 @@
+./album.csv
+./general_song.csv
+./artist.csv
+./genre.csv
+./music_format.csv
+./store.csv
+./relationships/artists_of_songs.csv
