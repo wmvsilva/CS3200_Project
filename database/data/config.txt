@@ -1,0 +1,14 @@
+./entities/album.csv
+./entities/general_song.csv
+./entities/single_song.csv
+./entities/artist.csv
+./entities/genre.csv
+./entities/music_format.csv
+./entities/store.csv
+./relationships/artists_of_songs.csv
+./relationships/featured_artists_of_songs.csv
+./relationships/genre_of_song.csv
+./relationships/artists_of_albums.csv
+./relationships/genre_of_album.csv
+./relationships/format_of_album.csv
+./relationships/store_catalog.csv
