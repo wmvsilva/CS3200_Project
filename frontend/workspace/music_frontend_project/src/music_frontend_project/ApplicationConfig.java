@@ -25,6 +25,17 @@ public class ApplicationConfig {
 		serverName = br.readLine();
 		portNumber = Integer.parseInt(br.readLine());
 		dbName = br.readLine();
+		br.close();
 	}
+
+	public void configure(Application app) {
+		app.setUsername(username);
+		app.setPassword(password);
+		app.setServerName(serverName);
+		app.setPortNumber(portNumber);
+		app.setDbName(dbName);
+	}
+
+	
 
 }
