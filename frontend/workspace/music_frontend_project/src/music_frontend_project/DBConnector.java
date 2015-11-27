@@ -13,6 +13,8 @@ public class DBConnector {
 
 	private String errorMsg = null;
 
+	private String disconnectError = null;
+
 	public void connectToDB(String username, String password,
 			String serverName, int portNumber, String dbName) {
 		// Set connection properties
@@ -29,5 +31,27 @@ public class DBConnector {
 		}
 
 		connected = true;
+	}
+
+	public boolean isConnected() {
+		return connected;
+	}
+
+	public String getErrorMsg() {
+		return errorMsg;
+	}
+
+	public boolean disconnectFromDB() {
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			disconnectError = e.getMessage();
+			return false;
+		}
+		return true;
+	}
+
+	public String getDisconnectError() {
+		return disconnectError;
 	}
 }

@@ -3,16 +3,22 @@ package music_frontend_project;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Menu {
 
-	int option;
-
-	Token token;
+	Map<Integer, Token> userChoices = new HashMap<Integer, Token>();
 
 	boolean shouldContinue = false;
 
 	String display = null;
+
+	int userChoice;
+
+	Menu(Token t, String dis) {
+
+	}
 
 	public boolean shouldContinue() {
 		return shouldContinue;
@@ -27,12 +33,12 @@ public class Menu {
 
 		try {
 			String userResponse = provideInputWithError();
-			Integer.parseInt(userResponse);
+			userChoice = Integer.parseInt(userResponse);
 			result = true;
 		} catch (IOException e) {
 			Printer.debug(e.getMessage());
 		} catch (NumberFormatException e) {
-			Printer.info("Please enter a integer option:");
+			Printer.info("The given input was not a number.");
 			result = getUserChoice();
 		}
 		return result;
@@ -49,7 +55,6 @@ public class Menu {
 	private static String provideInputWithError() throws IOException {
 		String result = null;
 
-		System.out.println(question);
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		result = br.readLine();
 
@@ -57,10 +62,10 @@ public class Menu {
 	}
 
 	public void executeUserChoice() {
-		token.executeAction();
+		userChoices.get(userChoice).executeAction();
 	}
 
 	public Menu goToNextMenu() {
-		return token.nextMenu();
+		return userChoices.get(userChoice).nextMenu();
 	}
 }
