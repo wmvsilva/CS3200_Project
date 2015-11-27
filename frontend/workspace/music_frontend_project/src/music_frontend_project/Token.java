@@ -1,15 +1,31 @@
 package music_frontend_project;
 
+import music_frontend_project.actions.Action;
+
 public class Token {
 
-	public void executeAction() {
-		// TODO Auto-generated method stub
+	String choiceDescription = null;
 
+	Action action;
+
+	Menu nextMenu;
+
+	Token(String c, Action a, Menu m) {
+		choiceDescription = c;
+		action = a;
+		nextMenu = m;
+	}
+
+	public void executeAction() {
+		action.execute();
 	}
 
 	public Menu nextMenu() {
-		// TODO Auto-generated method stub
-		return null;
+		return nextMenu;
+	}
+
+	public String getDescription() {
+		return choiceDescription;
 	}
 
 }

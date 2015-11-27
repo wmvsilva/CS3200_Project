@@ -3,29 +3,27 @@ package music_frontend_project;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
+
+import music_frontend_project.actions.Action;
 
 public class Menu {
 
-	Map<Integer, Token> userChoices = new HashMap<Integer, Token>();
+	List<Token> userChoices = new LinkedList<Token>();
 
-	boolean shouldContinue = false;
-
-	String display = null;
+	boolean shouldContinue = true;
 
 	int userChoice;
-
-	Menu(Token t, String dis) {
-
-	}
 
 	public boolean shouldContinue() {
 		return shouldContinue;
 	}
 
 	public void display() {
-		Printer.info(display);
+		for (int i = 0; i < userChoices.size(); i++) {
+			Printer.info("" + i + ". " + userChoices.get(i).getDescription());
+		}
 	}
 
 	public boolean getUserChoice() {
@@ -67,5 +65,14 @@ public class Menu {
 
 	public Menu goToNextMenu() {
 		return userChoices.get(userChoice).nextMenu();
+	}
+
+	public void setShouldContinue(boolean b) {
+		shouldContinue = b;
+	}
+
+	public void addOption(String description, Action action, Menu nextMenu) {
+		Token menuOption = new Token(description, action, nextMenu);
+		userChoices.add(menuOption);
 	}
 }
