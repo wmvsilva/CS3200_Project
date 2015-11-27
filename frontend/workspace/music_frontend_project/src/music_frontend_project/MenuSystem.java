@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.javatuples.Pair;
 import org.javatuples.Triplet;
 
 public final class MenuSystem {
@@ -82,6 +83,40 @@ public final class MenuSystem {
 			// viewAlbum(searchedAlbums.get(userPick).getValue2());
 		} else {
 			// viewSongs(searchedSongs.get(userPick).getValue2());
+		}
+	}
+
+	private void viewArtist(String artist) {
+		// Album, album id
+		List<Pair<String, Integer>> albumsByArtist = dbConn
+				.getAlbumsByArtist(artist);
+		printOptions("View Album", "Modify", "Delete", "Main Menu");
+		Integer choice = provideUserPick(3);
+		switch (choice) {
+		case (0):
+			for (int i = 0; i < albumsByArtist.size(); i++) {
+				String albumName = albumsByArtist.get(i).getValue0();
+				Printer.info("" + i + ". " + albumName);
+			}
+			Integer albumChoice = provideUserPick(albumsByArtist.size() - 1);
+			int albumId = albumsByArtist.get(albumChoice).getValue1();
+			viewAlbum(albumId);
+			break;
+		case (1):
+			Printer.info("Enter new artist name:");
+			String userChange = getUserInput();
+			dbConn.modifyArtist(artist, userChange);
+			Printer.info("Artist changed to " + userChange);
+			viewArtist(artist);
+			break;
+		case (2):
+			dbConn.deleteArtist(artist);
+			Printer.info("Artist deleted.");
+			mainMenu();
+			break;
+		case (3):
+			mainMenu();
+			break;
 		}
 	}
 
