@@ -73,3 +73,14 @@ BEGIN
     WHERE artist_name = old_artist_name;
 END //
 DELIMITER ;
+
+DROP PROCEDURE IF EXISTS delete_artist;
+DELIMITER //
+CREATE PROCEDURE
+delete_artist(IN given_artist_name VARCHAR(45))
+BEGIN
+	DELETE FROM
+		artist
+	WHERE artist_name = given_artist_name;
+END //
+DELIMITER ;

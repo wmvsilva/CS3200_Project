@@ -133,4 +133,11 @@ public class DBConnector {
 				ResultSet resultSet = statement.executeQuery()) {
 		}
 	}
+
+	public void deleteArtist(String artist) throws SQLException {
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL delete_artist('" + artist + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+	}
 }

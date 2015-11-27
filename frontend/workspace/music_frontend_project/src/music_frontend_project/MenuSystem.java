@@ -80,8 +80,7 @@ public final class MenuSystem {
 				"Enter a number or 0 to go to the Main Menu:");
 		if (userPick == 0) {
 			mainMenu();
-		}
-		if (userPick < countAfterArtists) {
+		} else if (userPick < countAfterArtists) {
 			viewArtist(searchedArtists.get(userPick - 1));
 		} else if (userPick + countAfterArtists < countAfterAlbums) {
 			// TODO viewAlbum(searchedAlbums.get(userPick).getValue2());
@@ -116,7 +115,7 @@ public final class MenuSystem {
 			String userChange = getUserInput();
 			dbConn.modifyArtist(artist, userChange);
 			Printer.info("Artist changed to " + userChange);
-			viewArtist(artist);
+			viewArtist(userChange);
 			break;
 		case (2):
 			dbConn.deleteArtist(artist);
