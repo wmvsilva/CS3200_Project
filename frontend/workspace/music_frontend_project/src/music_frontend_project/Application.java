@@ -141,19 +141,18 @@ public class Application {
 
 	private void userMenus(DBConnector dbConn) {
 		MenuSystem menus = new MenuSystem(dbConn);
-		boolean continueMenus = true;
-		while (continueMenus) {
-			try {
-				menus.mainMenu();
-			} catch (IOException e) {
-				Printer.err(e.getMessage());
-				Printer.err("There was an IO issue.");
-				continueMenus = false;
-			} catch (SQLException e) {
-				Printer.err(e.getMessage());
-				Printer.err("There was a SQL issue. Returning to main menu...");
-			}
+
+		try {
+			menus.mainMenu();
+		} catch (IOException e) {
+			Printer.err(e.getMessage());
+			Printer.err("There was an IO issue.");
+		} catch (SQLException e) {
+			Printer.err(e.getMessage());
+			Printer.err("There was a SQL issue. Returning to main menu...");
+			userMenus(dbConn);
 		}
+
 	}
 
 	private void connectToDBOrExit() {

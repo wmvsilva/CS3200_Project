@@ -74,14 +74,36 @@ public class DBConnector {
 		return result;
 	}
 
-	public List<Triplet<String, String, Integer>> searchAlbums(String userInput) {
+	public List<Triplet<String, String, Integer>> searchAlbums(String userInput)
+			throws SQLException {
 		List<Triplet<String, String, Integer>> result = new LinkedList<Triplet<String, String, Integer>>();
+
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL search_album('" + userInput + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+			while (resultSet.next()) {
+				result.add(new Triplet<String, String, Integer>(resultSet
+						.getString(1), resultSet.getString(2), resultSet
+						.getInt(3)));
+			}
+		}
 
 		return result;
 	}
 
-	public List<Triplet<String, String, Integer>> searchSongs(String userInput) {
+	public List<Triplet<String, String, Integer>> searchSongs(String userInput)
+			throws SQLException {
 		List<Triplet<String, String, Integer>> result = new LinkedList<Triplet<String, String, Integer>>();
+
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL search_song('" + userInput + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+			while (resultSet.next()) {
+				result.add(new Triplet<String, String, Integer>(resultSet
+						.getString(1), resultSet.getString(2), resultSet
+						.getInt(3)));
+			}
+		}
 
 		return result;
 	}

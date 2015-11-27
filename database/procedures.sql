@@ -20,3 +20,31 @@ BEGIN
 		artist_name LIKE CONCAT('%', search_name, '%');
 END //
 DELIMITER ;
+
+DROP PROCEDURE IF EXISTS search_album;
+DELIMITER //
+CREATE PROCEDURE
+search_album(IN search_name VARCHAR(45))
+BEGIN
+	SELECT
+		album_name, artist_name, album_id
+	FROM
+		album join artists_of_albums using (album_id)
+	WHERE
+		album_name LIKE CONCAT('%', search_name, '%');
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS search_song;
+DELIMITER //
+CREATE PROCEDURE
+search_song(IN search_name VARCHAR(45))
+BEGIN
+	SELECT
+		track_name, artist_name, song_id
+	FROM
+		general_song join artists_of_songs using (song_id)
+	WHERE
+		track_name LIKE CONCAT('%', search_name, '%');
+END //
+DELIMITER ;

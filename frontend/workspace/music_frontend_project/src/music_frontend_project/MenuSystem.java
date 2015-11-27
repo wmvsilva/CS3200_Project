@@ -35,8 +35,10 @@ public final class MenuSystem {
 		Printer.info("Enter text to search for:");
 		String userInput = getUserInput();
 		List<String> searchedArtists = dbConn.searchArtists(userInput);
+		// Album name, artist, id
 		List<Triplet<String, String, Integer>> searchedAlbums = dbConn
 				.searchAlbums(userInput);
+		// Song name, artist, id
 		List<Triplet<String, String, Integer>> searchedSongs = dbConn
 				.searchSongs(userInput);
 		int count = 0;
@@ -53,7 +55,7 @@ public final class MenuSystem {
 			Printer.info("[Albums]");
 			for (int i = 0; i < searchedArtists.size(); i++) {
 				Triplet<String, String, Integer> curr = searchedAlbums.get(i);
-				Printer.info("" + count + ". " + curr.getValue0() + " "
+				Printer.info("" + count + ". " + curr.getValue0() + " - "
 						+ curr.getValue1());
 				count++;
 			}
@@ -65,7 +67,7 @@ public final class MenuSystem {
 			Printer.info("[Songs]");
 			for (int i = 0; i < searchedSongs.size(); i++) {
 				Triplet<String, String, Integer> curr = searchedSongs.get(i);
-				Printer.info("" + count + ". " + curr.getValue0() + " "
+				Printer.info("" + count + ". " + curr.getValue0() + " - "
 						+ curr.getValue1());
 				count++;
 			}
@@ -75,7 +77,7 @@ public final class MenuSystem {
 
 		int userPick = provideUserPick(5);
 		if (userPick < countAfterArtists) {
-			// viewArtist(searchedArtists.get(userPick));
+			viewArtist(searchedArtists.get(userPick));
 		} else if (userPick + countAfterArtists < countAfterAlbums) {
 			// viewAlbum(searchedAlbums.get(userPick).getValue2());
 		} else {
