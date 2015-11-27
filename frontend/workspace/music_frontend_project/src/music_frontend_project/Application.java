@@ -1,5 +1,7 @@
 package music_frontend_project;
 
+import java.io.IOException;
+
 /**
  * Application to assist some user in interacting with a music database. The
  * user will be able to:
@@ -30,10 +32,6 @@ public class Application {
 
 	/** Handles interaction with the mySQL database */
 	private DBConnector dbConn = new DBConnector();
-
-	private CreatedMenus createdMenus = null;
-
-	private Menu currentMenu = null;
 
 	/**
 	 * Getter for username
@@ -136,27 +134,17 @@ public class Application {
 	public void run() {
 		printDatabaseConfig();
 		connectToDBOrExit();
-		initializeMenus();
-		userMenus();
+		try {
+			userMenus();
+		} catch (IOException e) {
+			Printer.err(e.getMessage());
+			Printer.err("There was an IO issue.");
+		}
 		exit(0);
 	}
 
-	private void initializeMenus() {
-		createdMenus = new CreatedMenus();
-		createdMenus.initializeMenus();
-		currentMenu = createdMenus.mainMenu();
-	}
-
-	private void userMenus() {
-		while (currentMenu.shouldContinue()) {
-			currentMenu.display();
-			if (!currentMenu.getUserChoice()) {
-				Printer.err("There was an error getting the user choice.");
-				exit(1);
-			}
-			currentMenu.executeUserChoice();
-			currentMenu = currentMenu.goToNextMenu();
-		}
+	private void userMenus() throws IOException {
+		MenuSystem.mainMenu();
 	}
 
 	private void connectToDBOrExit() {
