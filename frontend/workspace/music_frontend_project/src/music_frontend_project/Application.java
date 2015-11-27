@@ -29,7 +29,7 @@ public class Application {
 	private String dbName;
 
 	/** Handles interaction with the mySQL database */
-	private DBConnector dbConn;
+	private DBConnector dbConn = new DBConnector();
 
 	/**
 	 * Getter for username
@@ -131,7 +131,27 @@ public class Application {
 	 */
 	public void run() {
 		printDatabaseConfig();
-		connectToDatabase();
+		connectToDBOrExit();
+
+		exit(0);
+	}
+
+	private void connectToDBOrExit() {
+		dbConn.connectToDB(username, password, serverName, portNumber, dbName);
+		if (!dbConn.isConnected()) {
+			Printer.debug(dbConn.getErrorMsg());
+			Printer.info("Failed to connect to database.");
+			exit(1);
+		}
+	}
+
+	private void exit(int retCode) {
+		Printer.info("Exitting...");
+		if (!dbConn.disconnectFromDB()) {
+			Printer.debug(dbConn.getDisconnectError());
+			Printer.info("Could not disconnect from database.");
+		}
+		System.exit(retCode);
 	}
 
 	/**

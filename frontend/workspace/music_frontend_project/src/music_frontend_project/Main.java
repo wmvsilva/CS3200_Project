@@ -38,12 +38,12 @@ public class Main {
 		} catch (FileNotFoundException e) {
 			Printer.err("The config file '" + CONFIG_FILE + "' was not found.");
 			e.printStackTrace();
-			Main.exit(2);
+			Main.exit(1);
 		} catch (IOException e) {
 			Printer.err("There was an IO issue with the config file '"
 					+ CONFIG_FILE + "'.");
 			e.printStackTrace();
-			Main.exit(3);
+			Main.exit(1);
 		}
 
 		Application app = new Application();
