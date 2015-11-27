@@ -31,6 +31,8 @@ public class Application {
 	/** Handles interaction with the mySQL database */
 	private DBConnector dbConn = new DBConnector();
 
+	private Menu currentMenu = CreatedMenus.mainMenu();
+
 	/**
 	 * Getter for username
 	 * 
@@ -132,8 +134,17 @@ public class Application {
 	public void run() {
 		printDatabaseConfig();
 		connectToDBOrExit();
-
+		userMenus();
 		exit(0);
+	}
+
+	private void userMenus() {
+		while (currentMenu.shouldContinue()) {
+			currentMenu.display();
+			currentMenu.getUserChoice();
+			currentMenu.executeUserChoice();
+			currentMenu = currentMenu.goToNextMenu();
+		}
 	}
 
 	private void connectToDBOrExit() {
