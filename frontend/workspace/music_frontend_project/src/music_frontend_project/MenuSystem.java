@@ -42,7 +42,7 @@ public final class MenuSystem {
 		// Song name, artist, id
 		List<Triplet<String, String, Integer>> searchedSongs = dbConn
 				.searchSongs(userInput);
-		int count = 0;
+		int count = 1;
 		if (!searchedArtists.isEmpty()) {
 			Printer.info("[Artists]");
 			for (int i = 0; i < searchedArtists.size(); i++) {
@@ -76,20 +76,29 @@ public final class MenuSystem {
 
 		int countAfterSongs = count;
 
-		int userPick = provideUserPick(5);
+		int userPick = provideUserPick(5,
+				"Enter a number or 0 to go to the Main Menu:");
+		if (userPick == 0) {
+			mainMenu();
+		}
 		if (userPick < countAfterArtists) {
-			viewArtist(searchedArtists.get(userPick));
+			viewArtist(searchedArtists.get(userPick - 1));
 		} else if (userPick + countAfterArtists < countAfterAlbums) {
-			// viewAlbum(searchedAlbums.get(userPick).getValue2());
+			// TODO viewAlbum(searchedAlbums.get(userPick).getValue2());
 		} else {
-			// viewSongs(searchedSongs.get(userPick).getValue2());
+			// TODO viewSongs(searchedSongs.get(userPick).getValue2());
 		}
 	}
 
-	private void viewArtist(String artist) {
+	private void viewArtist(String artist) throws SQLException, IOException {
 		// Album, album id
 		List<Pair<String, Integer>> albumsByArtist = dbConn
 				.getAlbumsByArtist(artist);
+		Printer.info("Artist Name: " + artist);
+		for (Pair<String, Integer> p : albumsByArtist) {
+			Printer.info(p.getValue0());
+		}
+		Printer.info("");
 		printOptions("View Album", "Modify", "Delete", "Main Menu");
 		Integer choice = provideUserPick(3);
 		switch (choice) {
@@ -100,7 +109,7 @@ public final class MenuSystem {
 			}
 			Integer albumChoice = provideUserPick(albumsByArtist.size() - 1);
 			int albumId = albumsByArtist.get(albumChoice).getValue1();
-			viewAlbum(albumId);
+			// TODO viewAlbum(albumId);
 			break;
 		case (1):
 			Printer.info("Enter new artist name:");
@@ -136,8 +145,13 @@ public final class MenuSystem {
 	}
 
 	private static Integer provideUserPick(int maxPick) throws IOException {
+		return provideUserPick(maxPick, "Pick an option:");
+	}
+
+	private static Integer provideUserPick(int maxPick, String question)
+			throws IOException {
 		Integer result = null;
-		Printer.info("Pick an option: ");
+		Printer.info(question);
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 

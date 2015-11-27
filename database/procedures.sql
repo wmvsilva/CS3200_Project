@@ -48,3 +48,28 @@ BEGIN
 		track_name LIKE CONCAT('%', search_name, '%');
 END //
 DELIMITER ;
+
+DROP PROCEDURE IF EXISTS albums_by_artist;
+DELIMITER //
+CREATE PROCEDURE
+albums_by_artist(IN search_name VARCHAR(45))
+BEGIN
+	SELECT
+		album_name, album_id
+	FROM
+		album join artists_of_albums using (album_id)
+	WHERE
+		artist_name = search_name;
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS modify_artist;
+DELIMITER //
+CREATE PROCEDURE
+modify_artist(IN old_artist_name VARCHAR(45), 
+	IN new_artist_name VARCHAR(45))
+BEGIN
+	UPDATE artist SET artist_name = new_artist_name
+    WHERE artist_name = old_artist_name;
+END //
+DELIMITER ;

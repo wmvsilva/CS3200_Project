@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
+import org.javatuples.Pair;
 import org.javatuples.Triplet;
 
 public class DBConnector {
@@ -106,5 +107,30 @@ public class DBConnector {
 		}
 
 		return result;
+	}
+
+	public List<Pair<String, Integer>> getAlbumsByArtist(String artist)
+			throws SQLException {
+		List<Pair<String, Integer>> result = new LinkedList<Pair<String, Integer>>();
+
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL albums_by_artist('" + artist + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+			while (resultSet.next()) {
+				result.add(new Pair<String, Integer>(resultSet.getString(1),
+						resultSet.getInt(2)));
+			}
+		}
+
+		return result;
+	}
+
+	public void modifyArtist(String artist, String userChange)
+			throws SQLException {
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL modify_artist('" + artist + "', '"
+						+ userChange + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
 	}
 }
