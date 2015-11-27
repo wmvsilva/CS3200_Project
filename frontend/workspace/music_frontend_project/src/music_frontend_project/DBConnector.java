@@ -2,8 +2,14 @@ package music_frontend_project;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
+
+import org.javatuples.Triplet;
 
 public class DBConnector {
 
@@ -53,5 +59,30 @@ public class DBConnector {
 
 	public String getDisconnectError() {
 		return disconnectError;
+	}
+
+	public List<String> searchArtists(String userInput) throws SQLException {
+		List<String> result = new LinkedList<String>();
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL search_artist('" + userInput + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+			while (resultSet.next()) {
+				result.add(resultSet.getString(1));
+			}
+		}
+
+		return result;
+	}
+
+	public List<Triplet<String, String, Integer>> searchAlbums(String userInput) {
+		List<Triplet<String, String, Integer>> result = new LinkedList<Triplet<String, String, Integer>>();
+
+		return result;
+	}
+
+	public List<Triplet<String, String, Integer>> searchSongs(String userInput) {
+		List<Triplet<String, String, Integer>> result = new LinkedList<Triplet<String, String, Integer>>();
+
+		return result;
 	}
 }

@@ -1,6 +1,7 @@
 package music_frontend_project;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 /**
  * Application to assist some user in interacting with a music database. The
@@ -134,17 +135,25 @@ public class Application {
 	public void run() {
 		printDatabaseConfig();
 		connectToDBOrExit();
-		try {
-			userMenus();
-		} catch (IOException e) {
-			Printer.err(e.getMessage());
-			Printer.err("There was an IO issue.");
-		}
+		userMenus(dbConn);
 		exit(0);
 	}
 
-	private void userMenus() throws IOException {
-		MenuSystem.mainMenu();
+	private void userMenus(DBConnector dbConn) {
+		MenuSystem menus = new MenuSystem(dbConn);
+		boolean continueMenus = true;
+		while (continueMenus) {
+			try {
+				menus.mainMenu();
+			} catch (IOException e) {
+				Printer.err(e.getMessage());
+				Printer.err("There was an IO issue.");
+				continueMenus = false;
+			} catch (SQLException e) {
+				Printer.err(e.getMessage());
+				Printer.err("There was a SQL issue. Returning to main menu...");
+			}
+		}
 	}
 
 	private void connectToDBOrExit() {
