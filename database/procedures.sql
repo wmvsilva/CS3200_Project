@@ -84,3 +84,31 @@ BEGIN
 	WHERE artist_name = given_artist_name;
 END //
 DELIMITER ;
+
+DROP PROCEDURE IF EXISTS basic_album_info;
+DELIMITER //
+CREATE PROCEDURE
+basic_album_info(IN given_album_id VARCHAR(45))
+BEGIN
+	SELECT
+		album_name, release_date, album_cover
+	FROM
+		album
+	WHERE
+		album_id = given_album_id;
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS p_artists_of_album;
+DELIMITER //
+CREATE PROCEDURE
+p_artists_of_album(IN given_album_id VARCHAR(45))
+BEGIN
+	SELECT
+		album_name, release_date, album_cover
+	FROM
+		album
+	WHERE
+		album_id = given_album_id;
+END //
+DELIMITER ;

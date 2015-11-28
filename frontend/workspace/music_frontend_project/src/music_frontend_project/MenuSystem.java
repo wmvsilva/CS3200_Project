@@ -78,15 +78,99 @@ public final class MenuSystem {
 
 		int userPick = provideUserPick(5,
 				"Enter a number or 0 to go to the Main Menu:");
+		System.out.println(userPick);
+		System.out.println(countAfterArtists);
+		System.out.println(countAfterAlbums);
 		if (userPick == 0) {
 			mainMenu();
 		} else if (userPick < countAfterArtists) {
 			viewArtist(searchedArtists.get(userPick - 1));
-		} else if (userPick + countAfterArtists < countAfterAlbums) {
-			// TODO viewAlbum(searchedAlbums.get(userPick).getValue2());
+		} else if (userPick < countAfterAlbums) {
+			viewAlbum(searchedAlbums.get(userPick).getValue2());
 		} else {
 			// TODO viewSongs(searchedSongs.get(userPick).getValue2());
 		}
+	}
+
+	private void viewAlbum(Integer albumId) throws IOException, SQLException {
+		// Album Name, Release Date, Album Art
+		Triplet<String, String, String> albumInfo = dbConn
+				.getAlbumInfo(albumId);
+		// Artists of album
+		List<String> artists = dbConn.getArtistsOfAlbum(albumId);
+		// Genres of album
+		List<String> genres = dbConn.getGenresOfAlbum(albumId);
+		// Track name, Song Id
+		List<Pair<String, Integer>> tracks = dbConn.getAlbumTracks(albumId);
+		// Store, Price, Format
+		List<Triplet<String, Double, String>> albumStoreInfo = dbConn
+				.getAlbumStoreInfo(albumId);
+
+		Printer.info("Album Name: " + albumInfo.getValue0());
+		String artistsDelimited = "";
+		for (int i = 0; i < artists.size(); i++) {
+			artistsDelimited += artists.get(i);
+			if (i != artists.size() - 1) {
+				artistsDelimited += ",";
+			}
+		}
+		Printer.info("Artists: " + artistsDelimited);
+
+		Printer.info("Release Date: " + albumInfo.getValue1());
+
+		Printer.info("");
+
+		for (Pair<String, Integer> track : tracks) {
+			Printer.info(track.getValue0());
+		}
+		Printer.info("");
+
+		for (Triplet<String, Double, String> storeInfo : albumStoreInfo) {
+			Printer.info("Store: " + storeInfo.getValue0());
+			Printer.info("Price: " + storeInfo.getValue1());
+			Printer.info("Format: " + storeInfo.getValue2());
+		}
+
+		printOptions("View Song", "View Artist", "Show Album Art",
+				"Show Album Art", "Modify", "Delete", "Main Menu");
+		Integer choice = provideUserPick(5);
+		switch (choice) {
+		case (0):
+			for (int i = 0; i < tracks.size(); i++) {
+				String trackName = tracks.get(i).getValue0();
+				Printer.info("" + i + ". " + trackName);
+			}
+			Integer trackChoice = provideUserPick(tracks.size() - 1);
+			int trackId = tracks.get(trackChoice).getValue1();
+			// TODO viewSong(trackId);
+			break;
+		case (1):
+			for (int i = 0; i < artists.size(); i++) {
+				String artistName = artists.get(i);
+				Printer.info("" + i + ". " + artistName);
+			}
+			Integer artistChoice = provideUserPick(artists.size() - 1);
+			String artistName = artists.get(artistChoice);
+			viewArtist(artistName);
+			break;
+		case (2):
+			String albumFilePath = albumInfo.getValue2();
+			// TODO viewAlbumFilePath(albumFilePath);
+			viewAlbum(albumId);
+			break;
+		case (3):
+			// TODO modifyAlbum(albumId);
+			break;
+		case (4):
+			// TODO deleteAlbum(albumId);
+			Printer.info("Album deleted.");
+			mainMenu();
+			break;
+		case (5):
+			mainMenu();
+			break;
+		}
+
 	}
 
 	private void viewArtist(String artist) throws SQLException, IOException {
@@ -108,7 +192,7 @@ public final class MenuSystem {
 			}
 			Integer albumChoice = provideUserPick(albumsByArtist.size() - 1);
 			int albumId = albumsByArtist.get(albumChoice).getValue1();
-			// TODO viewAlbum(albumId);
+			viewAlbum(albumId);
 			break;
 		case (1):
 			Printer.info("Enter new artist name:");

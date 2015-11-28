@@ -140,4 +140,79 @@ public class DBConnector {
 				ResultSet resultSet = statement.executeQuery()) {
 		}
 	}
+
+	public Triplet<String, String, String> getAlbumInfo(Integer albumId)
+			throws SQLException {
+		Triplet<String, String, String> result;
+		// Album Name, Release Date, Album Art
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL basic_album_info(" + albumId + ")");
+				ResultSet resultSet = statement.executeQuery()) {
+			resultSet.next();
+			result = new Triplet<String, String, String>(
+					resultSet.getString(1), resultSet.getString(2),
+					resultSet.getString(3));
+		}
+
+		return result;
+	}
+
+	public List<String> getArtistsOfAlbum(Integer albumId) throws SQLException {
+		List<String> result = new LinkedList<String>();
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_artists_of_album(" + albumId + ")");
+				ResultSet resultSet = statement.executeQuery()) {
+			while (resultSet.next()) {
+				result.add(resultSet.getString(1));
+			}
+		}
+
+		return result;
+	}
+
+	public List<String> getGenresOfAlbum(Integer albumId) throws SQLException {
+		List<String> result = new LinkedList<String>();
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL genres_of_album(" + albumId + ")");
+				ResultSet resultSet = statement.executeQuery()) {
+			while (resultSet.next()) {
+				result.add(resultSet.getString(1));
+			}
+		}
+
+		return result;
+	}
+
+	public List<Pair<String, Integer>> getAlbumTracks(Integer albumId)
+			throws SQLException {
+		List<Pair<String, Integer>> result = new LinkedList<Pair<String, Integer>>();
+
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL genres_of_album(" + albumId + ")");
+				ResultSet resultSet = statement.executeQuery()) {
+			while (resultSet.next()) {
+				result.add(new Pair<String, Integer>(resultSet.getString(1),
+						resultSet.getInt(2)));
+			}
+		}
+
+		return result;
+	}
+
+	public List<Triplet<String, Double, String>> getAlbumStoreInfo(
+			Integer albumId) throws SQLException {
+		List<Triplet<String, Double, String>> result = new LinkedList<Triplet<String, Double, String>>();
+
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL album_store_info(" + albumId + ")");
+				ResultSet resultSet = statement.executeQuery()) {
+			while (resultSet.next()) {
+				result.add(new Triplet<String, Double, String>(resultSet
+						.getString(1), resultSet.getDouble(2), resultSet
+						.getString(3)));
+			}
+		}
+
+		return result;
+	}
 }
