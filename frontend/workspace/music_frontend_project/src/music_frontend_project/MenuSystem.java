@@ -3,10 +3,17 @@ package music_frontend_project;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.List;
 
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+
 import org.javatuples.Pair;
+import org.javatuples.Sextet;
 import org.javatuples.Triplet;
 
 public final class MenuSystem {
@@ -89,7 +96,7 @@ public final class MenuSystem {
 			viewAlbum(searchedAlbums.get(userPick - 1 - searchedArtists.size())
 					.getValue2());
 		} else {
-			// TODO viewSongs(searchedSongs.get(userPick).getValue2());
+			viewSong(searchedSongs.get(userPick).getValue2());
 		}
 	}
 
@@ -143,7 +150,7 @@ public final class MenuSystem {
 			}
 			Integer trackChoice = provideUserPick(tracks.size() - 1);
 			int trackId = tracks.get(trackChoice).getValue1();
-			// TODO viewSong(trackId);
+			viewSong(trackId);
 			break;
 		case (1):
 			for (int i = 0; i < artists.size(); i++) {
@@ -168,6 +175,119 @@ public final class MenuSystem {
 			mainMenu();
 			break;
 		case (5):
+			mainMenu();
+			break;
+		}
+
+	}
+
+	private void viewSong(int trackId) {
+		if (dbConn.isSingle(trackId)) {
+			viewGeneralSong(trackId);
+		} else {
+			viewSingle(trackId);
+		}
+
+	}
+
+	private void viewGeneralSong(int trackId) {
+		// Track Name, Track Number, Album Name, Album id, Lyric filepath,
+		// Sample filepath
+		Sextet<String, Integer, String, Integer, String, String> baseSongInfo = dbConn
+				.getBaseSongInfo(trackId);
+		// Artists
+		List<String> artists = dbConn.getSongArtists(trackId);
+		// Featured Artists
+		List<String> ftArtists = dbConn.getSongFtArtists(trackId);
+		// Genres
+		List<String> genres = dbConn.getGenres(trackId);
+
+		// Print all found information
+		Printer.info("Track Name: " + baseSongInfo.getValue0());
+		Printer.info("Track Number: " + baseSongInfo.getValue1());
+		Printer.info("Album: " + baseSongInfo.getValue2());
+		// Artists
+		String artistsDelim = "";
+		for (int i = 0; i < artists.size(); i++) {
+			artistsDelim += artists.get(i);
+			if (i != artists.size() - 1) {
+				artistsDelim += ",";
+			}
+		}
+		Printer.info("Artists: " + artistsDelim);
+		// Ft Artists
+		String ftArtistsDelim = "";
+		for (int i = 0; i < ftArtists.size(); i++) {
+			ftArtistsDelim += ftArtists.get(i);
+			if (i != ftArtists.size() - 1) {
+				ftArtistsDelim += ",";
+			}
+		}
+		Printer.info("Ft Artists: " + ftArtistsDelim);
+		// Genres
+		String genreDelim = "";
+		for (int i = 0; i < genres.size(); i++) {
+			genreDelim += genres.get(i);
+			if (i != genres.size() - 1) {
+				genreDelim += ",";
+			}
+		}
+		Printer.info("Genres: " + genreDelim);
+
+		// Show menu
+		printOptions("Show Album", "Show Artist", "Show Lyrics",
+				"Play Audio Sample", "Modify", "Delete", "Main Menu");
+		Integer choice = provideUserPick(7);
+		switch (choice) {
+		case (0):
+			// Show Album
+			viewAlbum(baseSongInfo.getValue3());
+			break;
+		case (1):
+			// Show Artist
+			for (int i = 0; i < artists.size(); i++) {
+				Printer.info("" + i + ". " + artists.get(i));
+			}
+			int artistChoice = provideUserPick(artists.size() - 1);
+			viewArtist(artists.get(artistChoice));
+			break;
+		case (2):
+			// Show Ft Artist
+			for (int i = 0; i < ftArtists.size(); i++) {
+				Printer.info("" + i + ". " + ftArtists.get(i));
+			}
+			int ftArtistChoice = provideUserPick(ftArtists.size() - 1);
+			viewArtist(ftArtists.get(ftArtistChoice));
+			break;
+		case (3):
+			// Show Lyrics
+			String lyricFilepath = baseSongInfo.getValue4();
+			byte[] encoded = Files.readAllBytes(Paths.get(lyricFilepath));
+			String lyrics = new String(encoded, Charset.defaultCharset());
+			Printer.info("[Lyrics]");
+			Printer.info(lyrics);
+			viewSong(trackId);
+			break;
+		case (4):
+			// Play Audio Sample
+			String bip = baseSongInfo.getValue4();
+			Media hit = new Media(bip);
+			MediaPlayer mediaPlayer = new MediaPlayer(hit);
+			mediaPlayer.play();
+			viewSong(trackId);
+			break;
+		case (5):
+			// Modify
+			modifyGeneralSong(trackId);
+			break;
+		case (6):
+			// Delete
+			dbConn.deleteSong(trackId);
+			Printer.info("Song deleted.");
+			mainMenu();
+			break;
+		case (7):
+			// Main menu
 			mainMenu();
 			break;
 		}
