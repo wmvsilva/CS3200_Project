@@ -173,7 +173,7 @@ public class DBConnector {
 	public List<String> getGenresOfAlbum(Integer albumId) throws SQLException {
 		List<String> result = new LinkedList<String>();
 		try (PreparedStatement statement = conn
-				.prepareStatement("CALL genres_of_album(" + albumId + ")");
+				.prepareStatement("CALL p_genres_of_album(" + albumId + ")");
 				ResultSet resultSet = statement.executeQuery()) {
 			while (resultSet.next()) {
 				result.add(resultSet.getString(1));
@@ -188,7 +188,7 @@ public class DBConnector {
 		List<Pair<String, Integer>> result = new LinkedList<Pair<String, Integer>>();
 
 		try (PreparedStatement statement = conn
-				.prepareStatement("CALL genres_of_album(" + albumId + ")");
+				.prepareStatement("CALL p_tracks_of_album(" + albumId + ")");
 				ResultSet resultSet = statement.executeQuery()) {
 			while (resultSet.next()) {
 				result.add(new Pair<String, Integer>(resultSet.getString(1),
@@ -204,7 +204,7 @@ public class DBConnector {
 		List<Triplet<String, Double, String>> result = new LinkedList<Triplet<String, Double, String>>();
 
 		try (PreparedStatement statement = conn
-				.prepareStatement("CALL album_store_info(" + albumId + ")");
+				.prepareStatement("CALL p_album_store_info(" + albumId + ")");
 				ResultSet resultSet = statement.executeQuery()) {
 			while (resultSet.next()) {
 				result.add(new Triplet<String, Double, String>(resultSet
@@ -214,5 +214,74 @@ public class DBConnector {
 		}
 
 		return result;
+	}
+
+	public void modifyAlbumName(Integer albumId, String newAlbumName)
+			throws SQLException {
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_modify_album_name(" + albumId + ",'"
+						+ newAlbumName + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+	}
+
+	public void modifyAlbumReleaseDate(Integer albumId, String newReleaseDate)
+			throws SQLException {
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_modify_album_release_date(" + albumId
+						+ ",'" + newReleaseDate + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+	}
+
+	public void modifyAlbumArtist(Integer albumId, String oldArtistName,
+			String newArtistName) throws SQLException {
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_modify_album_artist(" + albumId
+						+ ",'" + oldArtistName + "', '" + newArtistName + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+	}
+
+	public void modifyAlbumGenre(Integer albumId, String oldGenreName,
+			String newGenreName) throws SQLException {
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_modify_album_genre(" + albumId + ",'"
+						+ oldGenreName + "', '" + newGenreName + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+	}
+
+	public void modifyAlbumStoreCatalog(Integer albumId, String oldStoreName,
+			Double oldPrice, String oldFormat, String newValue)
+			throws SQLException {
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_modify_album_store_catalog("
+						+ albumId + ",'" + oldStoreName + "', '" + oldPrice
+						+ "', '" + oldFormat + "', '" + newValue + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+	}
+
+	public void modifyPriceCatalog(Integer albumId, String oldStoreName,
+			Double oldPrice, String oldFormat, String newValue)
+			throws SQLException {
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_modify_album_price_catalog("
+						+ albumId + ",'" + oldStoreName + "', '" + oldPrice
+						+ "', '" + oldFormat + "', '" + newValue + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+	}
+
+	public void modifyFormatCatalog(Integer albumId, String oldStoreName,
+			Double oldPrice, String oldFormat, String newValue)
+			throws SQLException {
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_modify_album_format_catalog("
+						+ albumId + ",'" + oldStoreName + "', '" + oldPrice
+						+ "', '" + oldFormat + "', '" + newValue + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
 	}
 }

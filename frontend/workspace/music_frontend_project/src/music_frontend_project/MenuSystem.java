@@ -54,7 +54,7 @@ public final class MenuSystem {
 
 		if (!searchedAlbums.isEmpty()) {
 			Printer.info("[Albums]");
-			for (int i = 0; i < searchedArtists.size(); i++) {
+			for (int i = 0; i < searchedAlbums.size(); i++) {
 				Triplet<String, String, Integer> curr = searchedAlbums.get(i);
 				Printer.info("" + count + ". " + curr.getValue0() + " - "
 						+ curr.getValue1());
@@ -86,7 +86,8 @@ public final class MenuSystem {
 		} else if (userPick < countAfterArtists) {
 			viewArtist(searchedArtists.get(userPick - 1));
 		} else if (userPick < countAfterAlbums) {
-			viewAlbum(searchedAlbums.get(userPick).getValue2());
+			viewAlbum(searchedAlbums.get(userPick - 1 - searchedArtists.size())
+					.getValue2());
 		} else {
 			// TODO viewSongs(searchedSongs.get(userPick).getValue2());
 		}
@@ -131,8 +132,8 @@ public final class MenuSystem {
 			Printer.info("Format: " + storeInfo.getValue2());
 		}
 
-		printOptions("View Song", "View Artist", "Show Album Art",
-				"Show Album Art", "Modify", "Delete", "Main Menu");
+		printOptions("View Song", "View Artist", "Show Album Art", "Modify",
+				"Delete", "Main Menu");
 		Integer choice = provideUserPick(5);
 		switch (choice) {
 		case (0):
@@ -155,11 +156,11 @@ public final class MenuSystem {
 			break;
 		case (2):
 			String albumFilePath = albumInfo.getValue2();
-			// TODO viewAlbumFilePath(albumFilePath);
+			ImageViewer.viewImage(albumFilePath);
 			viewAlbum(albumId);
 			break;
 		case (3):
-			// TODO modifyAlbum(albumId);
+			modifyAlbum(albumId);
 			break;
 		case (4):
 			// TODO deleteAlbum(albumId);
@@ -171,6 +172,100 @@ public final class MenuSystem {
 			break;
 		}
 
+	}
+
+	private void modifyAlbum(Integer albumId) throws SQLException, IOException {
+		// Album Name, Release Date, Album Art
+		Triplet<String, String, String> albumInfo = dbConn
+				.getAlbumInfo(albumId);
+		// Artists of album
+		List<String> artists = dbConn.getArtistsOfAlbum(albumId);
+		// Genres of album
+		List<String> genres = dbConn.getGenresOfAlbum(albumId);
+		// Store, Price, Format
+		List<Triplet<String, Double, String>> albumStoreInfo = dbConn
+				.getAlbumStoreInfo(albumId);
+
+		int count = 1;
+		Printer.info("" + count + ". Album Name: " + albumInfo.getValue0());
+		count++;
+		Printer.info("" + count + ". Release Date: " + albumInfo.getValue1());
+		count++;
+
+		for (int i = 0; i < artists.size(); i++) {
+			Printer.info("" + count + ". Artist: " + artists.get(i));
+			count++;
+		}
+		int countAfterArtist = count;
+		for (int i = 0; i < genres.size(); i++) {
+			Printer.info("" + count + ". Genre: " + genres.get(i));
+			count++;
+		}
+		int countAfterGenre = count;
+		for (int i = 0; i < albumStoreInfo.size(); i++) {
+			Triplet<String, Double, String> triplet = albumStoreInfo.get(i);
+			Printer.info("" + count + ". Store: " + triplet.getValue0());
+			count++;
+			Printer.info("" + count + ". Price: " + triplet.getValue1());
+			count++;
+			Printer.info("" + count + ". Format: " + triplet.getValue2());
+			count++;
+		}
+
+		int userInput = provideUserPick(1 + 2 + artists.size() + genres.size()
+				+ 3 * albumStoreInfo.size(),
+				"Enter number to modify or 0 to go back:");
+		if (userInput == 0) {
+			mainMenu();
+			return;
+		} else if (userInput == 1) {
+			Printer.info("Enter a new value:");
+			String newAlbumName = getUserInput();
+			dbConn.modifyAlbumName(albumId, newAlbumName);
+			return;
+		} else if (userInput == 2) {
+			Printer.info("Enter a new value:");
+			String newReleaseDate = getUserInput();
+			dbConn.modifyAlbumReleaseDate(albumId, newReleaseDate);
+			return;
+		} else if (userInput <= countAfterArtist) {
+			Printer.info("Enter a new value:");
+			String newArtistName = getUserInput();
+			String oldArtistName = artists.get(userInput - 3);
+			dbConn.modifyAlbumArtist(albumId, oldArtistName, newArtistName);
+			return;
+		} else if (userInput <= countAfterGenre) {
+			Printer.info("Enter a new value:");
+			String newGenreName = getUserInput();
+			String oldGenreName = artists.get(userInput - 3 - artists.size());
+			dbConn.modifyAlbumGenre(albumId, oldGenreName, newGenreName);
+			return;
+		} else {
+			Printer.info("Enter a new value:");
+			String newValue = getUserInput();
+			int howFarIntoList = userInput - 3 - artists.size() - genres.size();
+			int whichTriplet = (int) Math.ceil((double) howFarIntoList / 3.0);
+			Triplet<String, Double, String> triplet = albumStoreInfo
+					.get(whichTriplet);
+			int whichEntity = howFarIntoList % 3;
+
+			String oldStoreName = triplet.getValue0();
+			Double oldPrice = triplet.getValue1();
+			String oldFormat = triplet.getValue2();
+			// Store
+			if (whichEntity == 0) {
+				dbConn.modifyAlbumStoreCatalog(albumId, oldStoreName, oldPrice,
+						oldFormat, newValue);
+			} else if (whichEntity == 2) {
+				// Price
+				dbConn.modifyPriceCatalog(albumId, oldStoreName, oldPrice,
+						oldFormat, newValue);
+			} else {
+				// Format
+				dbConn.modifyFormatCatalog(albumId, oldStoreName, oldPrice,
+						oldFormat, newValue);
+			}
+		}
 	}
 
 	private void viewArtist(String artist) throws SQLException, IOException {

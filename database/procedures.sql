@@ -105,9 +105,66 @@ CREATE PROCEDURE
 p_artists_of_album(IN given_album_id VARCHAR(45))
 BEGIN
 	SELECT
-		album_name, release_date, album_cover
+		artist_name
 	FROM
-		album
+		artists_of_albums
+	WHERE
+		album_id = given_album_id;
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS p_genres_of_album;
+DELIMITER //
+CREATE PROCEDURE
+p_genres_of_album(IN given_album_id VARCHAR(45))
+BEGIN
+	SELECT
+		genre_name
+	FROM
+		genre_of_album
+	WHERE
+		album_id = given_album_id;
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS p_tracks_of_album;
+DELIMITER //
+CREATE PROCEDURE
+p_tracks_of_album(IN given_album_id VARCHAR(45))
+BEGIN
+	SELECT
+		track_name, song_id
+	FROM
+		general_song
+	WHERE
+		album_id = given_album_id;
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS p_tracks_of_album;
+DELIMITER //
+CREATE PROCEDURE
+p_tracks_of_album(IN given_album_id VARCHAR(45))
+BEGIN
+	SELECT
+		track_name, song_id
+	FROM
+		general_song
+	WHERE
+		album_id = given_album_id;
+END //
+DELIMITER ;
+
+-- Store, price, format
+DROP PROCEDURE IF EXISTS p_album_store_info;
+DELIMITER //
+CREATE PROCEDURE
+p_album_store_info(IN given_album_id VARCHAR(45))
+BEGIN
+	SELECT
+		store_name, album_price, format_name
+	FROM
+		store_catalog JOIN format_of_album USING (distribution_id)
 	WHERE
 		album_id = given_album_id;
 END //
