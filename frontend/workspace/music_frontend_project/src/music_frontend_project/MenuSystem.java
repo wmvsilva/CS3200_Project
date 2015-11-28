@@ -163,7 +163,7 @@ public final class MenuSystem {
 			modifyAlbum(albumId);
 			break;
 		case (4):
-			// TODO deleteAlbum(albumId);
+			dbConn.deleteAlbum(albumId);
 			Printer.info("Album deleted.");
 			mainMenu();
 			break;
@@ -216,44 +216,52 @@ public final class MenuSystem {
 				+ 3 * albumStoreInfo.size(),
 				"Enter number to modify or 0 to go back:");
 		if (userInput == 0) {
-			mainMenu();
+			viewAlbum(albumId);
 			return;
 		} else if (userInput == 1) {
 			Printer.info("Enter a new value:");
 			String newAlbumName = getUserInput();
 			dbConn.modifyAlbumName(albumId, newAlbumName);
+			viewAlbum(albumId);
 			return;
 		} else if (userInput == 2) {
 			Printer.info("Enter a new value:");
 			String newReleaseDate = getUserInput();
 			dbConn.modifyAlbumReleaseDate(albumId, newReleaseDate);
+			viewAlbum(albumId);
 			return;
-		} else if (userInput <= countAfterArtist) {
+		} else if (userInput < countAfterArtist) {
 			Printer.info("Enter a new value:");
 			String newArtistName = getUserInput();
 			String oldArtistName = artists.get(userInput - 3);
 			dbConn.modifyAlbumArtist(albumId, oldArtistName, newArtistName);
+			viewAlbum(albumId);
 			return;
-		} else if (userInput <= countAfterGenre) {
+		} else if (userInput < countAfterGenre) {
 			Printer.info("Enter a new value:");
 			String newGenreName = getUserInput();
-			String oldGenreName = artists.get(userInput - 3 - artists.size());
+			String oldGenreName = genres.get(userInput - 3 - artists.size());
 			dbConn.modifyAlbumGenre(albumId, oldGenreName, newGenreName);
+			Printer.info("Modifed genre " + oldGenreName + " to genre "
+					+ newGenreName + ".");
+			viewAlbum(albumId);
 			return;
 		} else {
 			Printer.info("Enter a new value:");
 			String newValue = getUserInput();
-			int howFarIntoList = userInput - 3 - artists.size() - genres.size();
-			int whichTriplet = (int) Math.ceil((double) howFarIntoList / 3.0);
+			int howFarIntoList = userInput - 2 - artists.size() - genres.size();
+			Printer.info("howFarIntoList: " + howFarIntoList);
+			int whichTriplet = (int) Math.ceil((double) howFarIntoList / 3.0) - 1;
 			Triplet<String, Double, String> triplet = albumStoreInfo
 					.get(whichTriplet);
 			int whichEntity = howFarIntoList % 3;
+			Printer.info("Entity is " + whichEntity);
 
 			String oldStoreName = triplet.getValue0();
 			Double oldPrice = triplet.getValue1();
 			String oldFormat = triplet.getValue2();
 			// Store
-			if (whichEntity == 0) {
+			if (whichEntity == 1) {
 				dbConn.modifyAlbumStoreCatalog(albumId, oldStoreName, oldPrice,
 						oldFormat, newValue);
 			} else if (whichEntity == 2) {
@@ -265,6 +273,7 @@ public final class MenuSystem {
 				dbConn.modifyFormatCatalog(albumId, oldStoreName, oldPrice,
 						oldFormat, newValue);
 			}
+			viewAlbum(albumId);
 		}
 	}
 

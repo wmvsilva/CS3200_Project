@@ -284,4 +284,11 @@ public class DBConnector {
 				ResultSet resultSet = statement.executeQuery()) {
 		}
 	}
+
+	public void deleteAlbum(Integer albumId) throws SQLException {
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_delete_album(" + albumId + ")");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+	}
 }
