@@ -365,4 +365,73 @@ public class DBConnector {
 
 		return outputValue;
 	}
+
+	public void modifyTrackName(int trackId, String newTrackName)
+			throws SQLException {
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_modify_track_name(" + trackId + ", '"
+						+ newTrackName + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+	}
+
+	public void modifyTrackNumber(int trackId, String newTrackNumber)
+			throws SQLException {
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_modify_track_number(" + trackId
+						+ ", " + newTrackNumber + ")");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+	}
+
+	public void modifySongAlbum(int trackId, String newAlbum,
+			String newReleaseDate) throws SQLException {
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_modify_song_album(" + trackId + ", '"
+						+ newAlbum + "', '" + newReleaseDate + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+	}
+
+	public void modifySongArtist(int trackId, String oldArtist, String newArtist)
+			throws SQLException {
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_modify_song_artist(" + trackId
+						+ ", '" + oldArtist + "', '" + newArtist + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+	}
+
+	public void modifySongFtArtist(int trackId, String oldFtArtist,
+			String newFtArtist) throws SQLException {
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_modify_song_ft_artist(" + trackId
+						+ ", '" + oldFtArtist + "', '" + newFtArtist + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+	}
+
+	public void modifySongGenre(int trackId, String oldGenre, String newGenre)
+			throws SQLException {
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_modify_song_genre(" + trackId + ", '"
+						+ oldGenre + "', '" + newGenre + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+	}
+
+	public List<String> getReleaseDatesOfAlbum(String newAlbumName)
+			throws SQLException {
+		List<String> result = new LinkedList<String>();
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_release_dates_of_album('"
+						+ newAlbumName + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+			while (resultSet.next()) {
+				result.add(resultSet.getString(1));
+			}
+		}
+
+		return result;
+	}
 }

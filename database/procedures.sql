@@ -386,3 +386,99 @@ BEGIN
 		song_id = given_song_id;
 END //
 DELIMITER ;
+
+DROP PROCEDURE IF EXISTS p_modify_track_name;
+DELIMITER //
+CREATE PROCEDURE
+p_modify_track_name(IN given_song_id INT,
+						IN new_track_name VARCHAR(45))
+BEGIN
+	UPDATE general_song SET track_name = new_track_name
+    WHERE song_id = given_song_id;
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS p_modify_track_number;
+DELIMITER //
+CREATE PROCEDURE
+p_modify_track_number(IN given_song_id INT,
+						IN new_track_number INT)
+BEGIN
+	UPDATE general_song SET track_number = new_track_number
+    WHERE song_id = given_song_id;
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS p_modify_song_album;
+DELIMITER //
+CREATE PROCEDURE
+p_modify_song_album(IN given_song_id INT,
+						IN new_album_name INT, IN release_date_of_album DATE)
+BEGIN
+    DECLARE new_album_id INT;
+    SET new_album_id = 
+		(SELECT
+			album_id
+		FROM
+			album
+		WHERE
+			album_name = new_album_name
+				AND
+			release_date = release_date_of_album);
+	UPDATE general_song SET album_id = new_album_id
+    WHERE song_id = given_song_id;
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS p_release_dates_of_album;
+DELIMITER //
+CREATE PROCEDURE
+p_release_dates_of_album(IN given_album_name VARCHAR(45))
+BEGIN
+    SELECT
+		release_date
+	FROM
+		album
+	WHERE
+		album_name = given_album_name;
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS p_modify_song_artist;
+DELIMITER //
+CREATE PROCEDURE
+p_modify_song_artist(IN given_track_id INT,
+						IN old_artist_name VARCHAR(45),
+                        IN new_artist_name VARCHAR(45))
+BEGIN
+	UPDATE artists_of_songs SET artist_name = new_artist_name
+    WHERE artist_name = old_artist_name
+		AND song_id = given_track_id;
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS p_modify_song_ft_artist;
+DELIMITER //
+CREATE PROCEDURE
+p_modify_song_ft_artist(IN given_track_id INT,
+						IN old_ft_artist_name VARCHAR(45),
+                        IN new_ft_artist_name VARCHAR(45))
+BEGIN
+	UPDATE featured_artists_of_songs SET featured_artist_name = new_ft_artist_name
+    WHERE featured_artist_name = old_ft_artist_name
+		AND song_id = given_track_id;
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS p_modify_song_genre;
+DELIMITER //
+CREATE PROCEDURE
+p_modify_song_genre(IN given_track_id INT,
+						IN old_genre_name VARCHAR(45),
+                        IN new_genre_name VARCHAR(45))
+BEGIN
+	UPDATE genre_of_song SET genre_name = new_genre_name
+    WHERE genre_name = old_genre_name
+		AND song_id = given_track_id;
+END //
+DELIMITER ;

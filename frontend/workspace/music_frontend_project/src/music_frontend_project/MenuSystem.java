@@ -298,6 +298,97 @@ public final class MenuSystem {
 
 	}
 
+	private void modifyGeneralSong(int trackId) throws SQLException,
+			IOException {
+		// Track Name, Track Number, Album Name, Album id, Lyric filepath,
+		// Sample filepath
+		Sextet<String, Integer, String, Integer, String, String> baseSongInfo = dbConn
+				.getBaseSongInfo(trackId);
+		// Artists
+		List<String> artists = dbConn.getSongArtists(trackId);
+		// Featured Artists
+		List<String> ftArtists = dbConn.getSongFtArtists(trackId);
+		// Genres
+		List<String> genres = dbConn.getGenres(trackId);
+
+		// Options
+		Printer.info("1. Track Name: " + baseSongInfo.getValue0());
+		Printer.info("2. Track Number: " + baseSongInfo.getValue1());
+		Printer.info("3. Album: " + baseSongInfo.getValue2());
+		int count = 4;
+		// Artists
+		for (int i = 0; i < artists.size(); i++) {
+			Printer.info("" + count + ". Artist: " + artists.get(i));
+			count++;
+		}
+		int countAfterArtist = count;
+		// Featured Artists
+		for (int i = 0; i < ftArtists.size(); i++) {
+			Printer.info("" + count + ". Ft Artist: " + ftArtists.get(i));
+			count++;
+		}
+		int countAfterFtArtist = count;
+		// Genres
+		for (int i = 0; i < genres.size(); i++) {
+			Printer.info("" + count + ". Genre: " + genres.get(i));
+			count++;
+		}
+
+		int userInput = provideUserPick(3 + artists.size() + ftArtists.size()
+				+ genres.size(), "Enter number to modify or 0 to go back:");
+
+		if (userInput == 0) {
+			viewSong(trackId);
+			return;
+		} else if (userInput == 1) {
+			Printer.info("Enter a value:");
+			String newTrackName = getUserInput();
+			dbConn.modifyTrackName(trackId, newTrackName);
+			viewSong(trackId);
+			return;
+		} else if (userInput == 2) {
+			Printer.info("Enter a value:");
+			String newTrackNumber = getUserInput();
+			dbConn.modifyTrackNumber(trackId, newTrackNumber);
+			viewSong(trackId);
+			return;
+		} else if (userInput == 3) {
+			Printer.info("Enter the new album name:");
+			String newAlbum = getUserInput();
+			List<String> releaseDates = dbConn.getReleaseDatesOfAlbum(newAlbum);
+			for (String date : releaseDates) {
+				Printer.info(newAlbum + " - " + date);
+			}
+			Printer.info("Enter the new album release date:");
+			String newReleaseDate = getUserInput();
+			dbConn.modifySongAlbum(trackId, newAlbum, newReleaseDate);
+			viewSong(trackId);
+			return;
+		} else if (userInput < countAfterArtist) {
+			Printer.info("Enter a value:");
+			String newArtist = getUserInput();
+			String oldArtist = artists.get(userInput - 4);
+			dbConn.modifySongArtist(trackId, oldArtist, newArtist);
+			viewSong(trackId);
+			return;
+		} else if (userInput < countAfterFtArtist) {
+			Printer.info("Enter a value:");
+			String newFtArtist = getUserInput();
+			String oldFtArtist = ftArtists.get(userInput - 4 - artists.size());
+			dbConn.modifySongFtArtist(trackId, oldFtArtist, newFtArtist);
+			viewSong(trackId);
+			return;
+		} else {
+			Printer.info("Enter a value:");
+			String newGenre = getUserInput();
+			String oldGenre = genres.get(userInput - 4 - artists.size()
+					- ftArtists.size());
+			dbConn.modifySongGenre(trackId, oldGenre, newGenre);
+			viewSong(trackId);
+			return;
+		}
+	}
+
 	private void modifyAlbum(Integer albumId) throws SQLException, IOException {
 		// Album Name, Release Date, Album Art
 		Triplet<String, String, String> albumInfo = dbConn
