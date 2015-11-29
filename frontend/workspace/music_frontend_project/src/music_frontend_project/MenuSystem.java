@@ -9,9 +9,6 @@ import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.List;
 
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-
 import org.javatuples.Pair;
 import org.javatuples.Sextet;
 import org.javatuples.Triplet;
@@ -83,7 +80,9 @@ public final class MenuSystem {
 
 		int countAfterSongs = count;
 
-		int userPick = provideUserPick(5,
+		int userPick = provideUserPick(
+				searchedArtists.size() + searchedAlbums.size()
+						+ searchedSongs.size(),
 				"Enter a number or 0 to go to the Main Menu:");
 		System.out.println(userPick);
 		System.out.println(countAfterArtists);
@@ -96,7 +95,9 @@ public final class MenuSystem {
 			viewAlbum(searchedAlbums.get(userPick - 1 - searchedArtists.size())
 					.getValue2());
 		} else {
-			viewSong(searchedSongs.get(userPick).getValue2());
+			viewSong(searchedSongs.get(
+					userPick - 1 - searchedArtists.size()
+							- searchedAlbums.size()).getValue2());
 		}
 	}
 
@@ -181,16 +182,16 @@ public final class MenuSystem {
 
 	}
 
-	private void viewSong(int trackId) {
-		if (dbConn.isSingle(trackId)) {
+	private void viewSong(int trackId) throws SQLException, IOException {
+		if (!dbConn.isSingle(trackId)) {
 			viewGeneralSong(trackId);
 		} else {
-			viewSingle(trackId);
+			// TODO viewSingle(trackId);
 		}
 
 	}
 
-	private void viewGeneralSong(int trackId) {
+	private void viewGeneralSong(int trackId) throws SQLException, IOException {
 		// Track Name, Track Number, Album Name, Album id, Lyric filepath,
 		// Sample filepath
 		Sextet<String, Integer, String, Integer, String, String> baseSongInfo = dbConn
@@ -235,8 +236,9 @@ public final class MenuSystem {
 		Printer.info("Genres: " + genreDelim);
 
 		// Show menu
-		printOptions("Show Album", "Show Artist", "Show Lyrics",
-				"Play Audio Sample", "Modify", "Delete", "Main Menu");
+		printOptions("Show Album", "Show Artist", "Show Ft Artist",
+				"Show Lyrics", "Play Audio Sample", "Modify", "Delete",
+				"Main Menu");
 		Integer choice = provideUserPick(7);
 		switch (choice) {
 		case (0):
@@ -253,6 +255,11 @@ public final class MenuSystem {
 			break;
 		case (2):
 			// Show Ft Artist
+			if (ftArtists.isEmpty()) {
+				Printer.info("There are no featured artists.");
+				viewSong(trackId);
+				return;
+			}
 			for (int i = 0; i < ftArtists.size(); i++) {
 				Printer.info("" + i + ". " + ftArtists.get(i));
 			}
@@ -270,10 +277,7 @@ public final class MenuSystem {
 			break;
 		case (4):
 			// Play Audio Sample
-			String bip = baseSongInfo.getValue4();
-			Media hit = new Media(bip);
-			MediaPlayer mediaPlayer = new MediaPlayer(hit);
-			mediaPlayer.play();
+			MP3Player.playAudio(baseSongInfo.getValue5());
 			viewSong(trackId);
 			break;
 		case (5):
@@ -282,7 +286,7 @@ public final class MenuSystem {
 			break;
 		case (6):
 			// Delete
-			dbConn.deleteSong(trackId);
+			// TODO dbConn.deleteSong(trackId);
 			Printer.info("Song deleted.");
 			mainMenu();
 			break;

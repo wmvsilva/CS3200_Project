@@ -328,3 +328,61 @@ BEGIN
 	WHERE album_id = given_album_id;
 END //
 DELIMITER ;
+
+-- Track Name, Track Number, Album Name, Album id, Lyric filepath,
+-- Sample filepath
+DROP PROCEDURE IF EXISTS p_base_song_info;
+DELIMITER //
+CREATE PROCEDURE
+p_base_song_info(IN given_song_id INT)
+BEGIN
+	SELECT
+		track_name, track_number, album_name, album_id, lyrics, audio_sample
+	FROM
+		general_song JOIN album USING (album_id)
+	WHERE
+		song_id = given_song_id;
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS p_song_artists;
+DELIMITER //
+CREATE PROCEDURE
+p_song_artists(IN given_song_id INT)
+BEGIN
+	SELECT
+		artist_name
+	FROM
+		artists_of_songs
+	WHERE
+		song_id = given_song_id;
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS p_song_ft_artists;
+DELIMITER //
+CREATE PROCEDURE
+p_song_ft_artists(IN given_song_id INT)
+BEGIN
+	SELECT
+		featured_artist_name
+	FROM
+		featured_artists_of_songs
+	WHERE
+		song_id = given_song_id;
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS p_song_genres;
+DELIMITER //
+CREATE PROCEDURE
+p_song_genres(IN given_song_id INT)
+BEGIN
+	SELECT
+		genre_name
+	FROM
+		genre_of_song
+	WHERE
+		song_id = given_song_id;
+END //
+DELIMITER ;

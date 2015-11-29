@@ -1,5 +1,6 @@
 package music_frontend_project;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.javatuples.Pair;
+import org.javatuples.Sextet;
 import org.javatuples.Triplet;
 
 public class DBConnector {
@@ -290,5 +292,77 @@ public class DBConnector {
 				.prepareStatement("CALL p_delete_album(" + albumId + ")");
 				ResultSet resultSet = statement.executeQuery()) {
 		}
+	}
+
+	// Track Name, Track Number, Album Name, Album id, Lyric filepath,
+	// Sample filepath
+	public Sextet<String, Integer, String, Integer, String, String> getBaseSongInfo(
+			int trackId) throws SQLException {
+		Sextet<String, Integer, String, Integer, String, String> result;
+
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_base_song_info(" + trackId + ")");
+				ResultSet resultSet = statement.executeQuery()) {
+			resultSet.next();
+			result = new Sextet<String, Integer, String, Integer, String, String>(
+					resultSet.getString(1), resultSet.getInt(2),
+					resultSet.getString(3), resultSet.getInt(4),
+					resultSet.getString(5), resultSet.getString(6));
+		}
+
+		return result;
+	}
+
+	public List<String> getSongArtists(int trackId) throws SQLException {
+		List<String> result = new LinkedList<String>();
+
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_song_artists(" + trackId + ")");
+				ResultSet resultSet = statement.executeQuery()) {
+			while (resultSet.next()) {
+				result.add(resultSet.getString(1));
+			}
+		}
+
+		return result;
+	}
+
+	public List<String> getSongFtArtists(int trackId) throws SQLException {
+		List<String> result = new LinkedList<String>();
+
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_song_ft_artists(" + trackId + ")");
+				ResultSet resultSet = statement.executeQuery()) {
+			while (resultSet.next()) {
+				result.add(resultSet.getString(1));
+			}
+		}
+
+		return result;
+	}
+
+	public List<String> getGenres(int trackId) throws SQLException {
+		List<String> result = new LinkedList<String>();
+
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_song_genres(" + trackId + ")");
+				ResultSet resultSet = statement.executeQuery()) {
+			while (resultSet.next()) {
+				result.add(resultSet.getString(1));
+			}
+		}
+
+		return result;
+	}
+
+	public boolean isSingle(int trackId) throws SQLException {
+		CallableStatement cStmt = conn
+				.prepareCall("{? = call f_is_song_single(?)}");
+		cStmt.registerOutParameter(1, java.sql.Types.BOOLEAN);
+		cStmt.setInt(2, trackId);
+		cStmt.execute();
+		Boolean outputValue = cStmt.getBoolean(1);
+
+		return outputValue;
 	}
 }
