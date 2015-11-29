@@ -84,9 +84,6 @@ public final class MenuSystem {
 				searchedArtists.size() + searchedAlbums.size()
 						+ searchedSongs.size(),
 				"Enter a number or 0 to go to the Main Menu:");
-		System.out.println(userPick);
-		System.out.println(countAfterArtists);
-		System.out.println(countAfterAlbums);
 		if (userPick == 0) {
 			mainMenu();
 		} else if (userPick < countAfterArtists) {
@@ -286,7 +283,7 @@ public final class MenuSystem {
 			break;
 		case (6):
 			// Delete
-			// TODO dbConn.deleteSong(trackId);
+			dbConn.deleteSong(trackId);
 			Printer.info("Song deleted.");
 			mainMenu();
 			break;

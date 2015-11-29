@@ -482,3 +482,14 @@ BEGIN
 		AND song_id = given_track_id;
 END //
 DELIMITER ;
+
+DROP PROCEDURE IF EXISTS p_delete_song;
+DELIMITER //
+CREATE PROCEDURE
+p_delete_song(IN given_song_id INT)
+BEGIN
+	DELETE FROM
+		general_song
+	WHERE song_id = given_song_id;
+END //
+DELIMITER ;

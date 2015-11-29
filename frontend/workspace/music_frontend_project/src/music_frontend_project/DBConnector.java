@@ -434,4 +434,11 @@ public class DBConnector {
 
 		return result;
 	}
+
+	public void deleteSong(int trackId) throws SQLException {
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_delete_song(" + trackId + ")");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+	}
 }
