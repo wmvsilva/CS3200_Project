@@ -1,12 +1,14 @@
-"album_id","album_name","release_date","album_cover"
-"1","1989","2014-10-27","Taylor_Swift_-_1989.png"
-"2","Red","2012-10-22","Taylor_Swift_-_Red.png"
-"3","Let It Bleed","1969-12-05","Rolling_Stones_-_Let_It_Bleed.png"
-"4","News of the World","1977-10-28","Queen_-_News_Of_The_World.png"
-"5","The Works","1984-02-27","Queen_-_The_Works.png"
-"6","1000 Forms of Fear","2014-07-04","Sia_-_1000_Forms_of_Fear.png"
-"7","21","2011-01-19","Adele_-_21.png"
-"8","25","2015-11-20","Adele_-_25.png"
-"9","What a Time to Be Alive","2015-09-20","Drake_Future_-_What_a_Time_to_Be_Alive.png"
-"10","Nothing Was the Same","2013-09-23","Drake_-_Nothing_Was_the_Same.png"
-"11","Under the Mistletoe","2011-11-01","Justin_Bieber_-_Under_the_Mistletoe.png"
+album_id,album_name,release_date,album_cover
+1,1989,10/27/2014,Taylor_Swift_-_1989.png
+2,Red,10/22/2012,Taylor_Swift_-_Red.png
+3,Let It Bleed,12/5/1969,Rolling_Stones_-_Let_It_Bleed.png
+4,News of the World,10/28/1977,Queen_-_News_Of_The_World.png
+5,The Works,2/27/1984,Queen_-_The_Works.png
+6,1000 Forms of Fear,7/4/2014,Sia_-_1000_Forms_of_Fear.png
+7,21,1/19/2011,Adele_-_21.png
+8,25,11/20/2015,Adele_-_25.png
+9,What a Time to Be Alive,9/20/2015,Drake_Future_-_What_a_Time_to_Be_Alive.png
+10,Nothing Was the Same,9/23/2013,Drake_-_Nothing_Was_the_Same.png
+11,Under the Mistletoe,11/1/2011,Justin_Bieber_-_Under_the_Mistletoe.png
+12,Adventure (Deluxe),3/27/2015,Madeon_-_Adventure_(Deluxe).png
+13,AT.LONG.LAST.A$AP,5/26/2015,A$AP_Rocky_-_AT.LONG.LAST.A$AP.jpg

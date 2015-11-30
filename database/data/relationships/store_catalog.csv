@@ -1,2 +1,5 @@
-"store_name","distribution_id","album_price"
-"Amazon",1,12.49
+store_name,distribution_id,album_price
+Amazon,1,12.49
+iTunes,6,13.99
+Barnes & Noble,7,26.59
+iTunes,8,5.99

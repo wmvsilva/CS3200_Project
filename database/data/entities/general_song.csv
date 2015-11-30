@@ -1,8 +1,44 @@
-"song_id","track_name","lyrics","audio_sample","length_seconds","album_id","track_number"
-1,"Bad Blood","Taylor_Swift_-_Bad_Blood.txt","Taylor_Swift_-_Bad_Blood.mp3",211,1,8
-2,"Blank Space","Taylor_Swift_-_Blank_Space.txt","Taylor_Swift_-_Blank_Space.mp3",231,1,2
-3,"Treacherous","Taylor_Swift_-_Treacherous.txt","Taylor_Swift_-_Treacherous.mp3",241,2,3
-4,"Gimme Shelter","Rolling_Stones_-_Gimme_Shelter.txt","Rolling_Stones_-_Gimme_Shelter.mp3",277,3,1
-5,"We Will Rock You","Queen_-_We_Will_Rock_You.txt","Queen_-_We_Will_Rock_You.mp3",122,4,1
-6,"One and Only","Adele_-_One_and_Only.txt","Adele_-_One_and_Only.mp3",348,7,9
-7,"The Christmas Song (Chestnuts Roasting on an Open Fire)","Justin_Bieber_-_The_Christmas_Song.txt","Justin_Bieber_-_The_Christmas_Song.mp3",215,11,3
+song_id,track_name,lyrics,audio_sample,length_seconds,album_id,track_number
+1,Bad Blood,Taylor_Swift_-_Bad_Blood.txt,Taylor_Swift_-_Bad_Blood.mp3,211,1,8
+2,Blank Space,Taylor_Swift_-_Blank_Space.txt,Taylor_Swift_-_Blank_Space.mp3,231,1,2
+3,Treacherous,Taylor_Swift_-_Treacherous.txt,Taylor_Swift_-_Treacherous.mp3,241,2,3
+4,Gimme Shelter,Rolling_Stones_-_Gimme_Shelter.txt,Rolling_Stones_-_Gimme_Shelter.mp3,277,3,1
+5,We Will Rock You,Queen_-_We_Will_Rock_You.txt,Queen_-_We_Will_Rock_You.mp3,122,4,1
+6,One and Only,Adele_-_One_and_Only.txt,Adele_-_One_and_Only.mp3,348,7,9
+7,The Christmas Song (Chestnuts Roasting on an Open Fire),Justin_Bieber_-_The_Christmas_Song.txt,Justin_Bieber_-_The_Christmas_Song.mp3,215,11,3
+8,Isometric (Intro),/N,Madeon_-_Isometric_(Intro).mp3,81,12,1
+9,You're On,/N,Madeon_-_You're_On.mp3,193,12,2
+10,OK,/N,Madeon_-_OK.mp3,182,12,3
+11,La Lune,/N,Madeon_-_La_Lune.mp3,220,12,4
+12,Pay No Mind,/N,Madeon_-_Pay_No_Mind.mp3,249,12,5
+13,Beings,/N,Madeon_-_Beings.mp3,215,12,6
+14,Imperium,/N,Madeon_-_Imperium.mp3,199,12,7
+15,Zephyr,/N,Madeon_-_Zephyr.mp3,220,12,8
+16,Nonsense,/N,Madeon_-_Nonsense.mp3,226,12,9
+17,Innocence,/N,Madeon_-_Innocence.mp3,224,12,10
+18,Pixel Empire,/N,Madeon_-_Pixel Empire.mp3,245,12,11
+19,Home,/N,Madeon_-_Home.mp3,225,12,12
+20,Icarus,/N,Madeon_-_Icarus.mp3,215,12,13
+21,Finale,/N,Madeon_-_Finale.mp3,205,12,14
+22,The City,/N,Madeon_-_The City.mp3,234,12,15
+23,Cut the Kid,/N,Madeon_-_Cut the Kid.mp3,198,12,16
+24,Technicolor,/N,Madeon_-_Technicolor.mp3,385,12,17
+25,Only Way Out,/N,Madeon_-_Only_Way_Out.mp3,227,12,18
+26,Holy Ghost,A$AP_Rocky_-_Holy_Ghost.txt,/N,191,13,1
+27,Canal St.,A$AP_Rocky_-_Canal_St..txt,/N,227,13,2
+28,Fine Whine,A$AP_Rocky_-_Fine_Whine.txt,/N,219,13,3
+29,L$D,A$AP_Rocky_-_L$D.txt,/N,238,13,4
+30,Excuse Me,A$AP_Rocky_-_Excuse_Me.txt,/N,238,13,5
+31,JD,A$AP_Rocky_-_JD.txt,/N,106,13,6
+32,Lord Pretty Flacko Jodye 2 (LPFJ2),A$AP_Rocky_-_Lord_Pretty_Flacko_Jodye_2_(LPFJ2).txt,/N,127,13,7
+33,Electric Body,A$AP_Rocky_-_Electric_Body.txt,/N,255,13,8
+34,Jukebox Joints,A$AP_Rocky_-_Jukebox_Joints.txt,/N,324,13,9
+35,Max B,A$AP_Rocky_-_Max_B.txt,/N,241,13,10
+36,Pharsyde,A$AP_Rocky_-_Pharcyde.txt,/N,222,13,11
+37,Wavybone,A$AP_Rocky_-_Wavybone.txt,/N,303,13,12
+38,West Side Highway,A$AP_Rocky_-_West_Side_Highway.txt,/N,177,13,13
+39,Better Things,A$AP_Rocky_-_Better_Things.txt,/N,199,13,14
+40,M'$,A$AP_Rocky_-_M'$.txt,/N,233,13,15
+41,Dreams (Interlude),A$AP_Rocky_-_Dreams_(Interlude).txt,/N,137,13,16
+42,Everyday,A$AP_Rocky_-_Everyday.txt,/N,261,13,17
+43,Back Home,A$AP_Rocky_-_Back_Home.txt,/N,278,13,18
