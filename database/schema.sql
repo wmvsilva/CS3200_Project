@@ -104,7 +104,7 @@ CREATE TABLE general_song
 		fk_general_song_album_album_id
     FOREIGN KEY ( album_id)
 		REFERENCES album(album_id)
-        ON DELETE RESTRICT
+        ON DELETE CASCADE
         ON UPDATE CASCADE
         
 ) ENGINE = INNODB;
