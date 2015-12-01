@@ -47,7 +47,7 @@ insert into general_song(song_id,track_name,lyrics,audio_sample,length_seconds,a
 insert into general_song(song_id,track_name,lyrics,audio_sample,length_seconds,album_id,track_number)
 	values ("11","La Lune",NULL,"Madeon_-_La_Lune.mp3","220","12","4");
 insert into general_song(song_id,track_name,lyrics,audio_sample,length_seconds,album_id,track_number)
-	values ("12","Pay No Mind",NULL,"Madeon_-_Pay_No_Mind.mp3","249","12","5");
+	values ("12","Pay No Mind","Madeon_-_Pay_No_Mind.txt","Madeon_-_Pay_No_Mind.mp3","249","12","5");
 insert into general_song(song_id,track_name,lyrics,audio_sample,length_seconds,album_id,track_number)
 	values ("13","Beings",NULL,"Madeon_-_Beings.mp3","215","12","6");
 insert into general_song(song_id,track_name,lyrics,audio_sample,length_seconds,album_id,track_number)

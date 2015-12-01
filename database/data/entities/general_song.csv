@@ -10,7 +10,7 @@ song_id,track_name,lyrics,audio_sample,length_seconds,album_id,track_number
 9,You're On,\N,Madeon_-_You're_On.mp3,193,12,2
 10,OK,\N,Madeon_-_OK.mp3,182,12,3
 11,La Lune,\N,Madeon_-_La_Lune.mp3,220,12,4
-12,Pay No Mind,\N,Madeon_-_Pay_No_Mind.mp3,249,12,5
+12,Pay No Mind,Madeon_-_Pay_No_Mind.txt,Madeon_-_Pay_No_Mind.mp3,249,12,5
 13,Beings,\N,Madeon_-_Beings.mp3,215,12,6
 14,Imperium,\N,Madeon_-_Imperium.mp3,199,12,7
 15,Zephyr,\N,Madeon_-_Zephyr.mp3,220,12,8
