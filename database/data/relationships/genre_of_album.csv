@@ -1,22 +1,27 @@
-"album_id","genre_name"
-1,"pop"
-1,"dance-pop"
-1,"synthpop"
-2,"pop"
-3,"hard rock"
-3,"blues"
-3,"country blues"
-4,"arena rock"
-4,"rock"
-5,"rock"
-6,"electropop"
-7,"soul"
-7,"pop"
-7,"R&B"
-8,"soul"
-9,"hip hop"
-9,"trap"
-10,"hip hop"
-11,"teen pop"
-11,"R&B"
-11,"holiday"
+album_id,genre_name
+1,pop
+1,dance-pop
+1,synthpop
+2,pop
+3,hard rock
+3,blues
+3,country blues
+4,arena rock
+4,rock
+5,rock
+6,electropop
+7,soul
+7,pop
+7,R&B
+8,soul
+9,hip hop
+9,trap
+10,hip hop
+11,teen pop
+11,R&B
+11,holiday
+12,dance
+12,electro house
+12,pop
+13,trap
+13,hip hop

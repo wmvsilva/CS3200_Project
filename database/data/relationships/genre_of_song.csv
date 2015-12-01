@@ -1,9 +1,45 @@
-"song_id","genre_name"
-1,"pop"
-1,"hip hop"
-2,"electropop"
-3,"pop"
-4,"hard rock"
-5,"arena rock"
-6,"pop rock"
-7, "holiday"
+song_id,genre_name
+1,pop
+1,hip hop
+2,electropop
+3,pop
+4,hard rock
+5,arena rock
+6,pop rock
+7,holiday
+8,electro house
+9,electro house
+10,electro house
+11,electro house
+12,electro house
+13,electro house
+14,electro house
+15,electro house
+16,electro house
+17,electro house
+18,electro house
+19,electro house
+20,electro house
+21,electro house
+22,electro house
+23,electro house
+24,electro house
+25,electro house
+26,hip hop
+27,hip hop
+28,hip hop
+29,hip hop
+30,hip hop
+31,hip hop
+32,hip hop
+33,hip hop
+34,hip hop
+35,hip hop
+36,hip hop
+37,hip hop
+38,hip hop
+39,hip hop
+40,hip hop
+41,hip hop
+42,hip hop
+43,hip hop

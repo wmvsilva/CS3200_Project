@@ -1,5 +1,5 @@
-"song_id","release_date","cover_art"
-1,"2015-05-17","Taylor_Swift_-_Bad_Blood.png"
-2,"2014-11-10","Taylor_Swift_-_Blank_Space.png"
-4,"1969-12-05",\N
-5,"1977-10-07","Queen_-_We_Will_Rock_You.png"
+song_id,release_date,cover_art
+1,2015-05-17,Taylor_Swift_-_Bad_Blood.png
+2,2014-11-10,Taylor_Swift_-_Blank_Space.png
+4,1969-12-05,\N
+5,1977-10-07,Queen_-_We_Will_Rock_You.png

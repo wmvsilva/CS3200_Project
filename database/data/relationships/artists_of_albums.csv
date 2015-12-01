@@ -1,13 +1,15 @@
-"album_id","artist_name"
-1,"Taylor Swift"
-2,"Taylor Swift"
-3,"The Rolling Stones"
-4,"Queen"
-5,"Queen"
-6,"Sia"
-7,"Adele"
-8,"Adele"
-9,"Drake"
-9,"Future"
-10,"Drake"
-11,"Justin Bieber"
+album_id,artist_name
+1,Taylor Swift
+2,Taylor Swift
+3,The Rolling Stones
+4,Queen
+5,Queen
+6,Sia
+7,Adele
+8,Adele
+9,Drake
+9,Future
+10,Drake
+11,Justin Bieber
+12,Madeon
+13,A$AP Rocky

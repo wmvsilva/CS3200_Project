@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -52,6 +53,14 @@ public class Main {
 
 		return result;
 	}
+	
+	public static String join(Iterable<? extends CharSequence> s, String delimiter) {
+	    Iterator<? extends CharSequence> iter = s.iterator();
+	    if (!iter.hasNext()) return "";
+	    StringBuilder buffer = new StringBuilder(iter.next());
+	    while (iter.hasNext()) buffer.append(delimiter).append(iter.next());
+	    return buffer.toString();
+	}
 
 	public static void transferToFile(File f, FileWriter fw) throws IOException {
 		System.out.println(f.getName());
@@ -64,8 +73,14 @@ public class Main {
 
 		String line = br.readLine();
 		while (line != null) {
+			String[] elementsArr = line.split(",");
+			List<String> elements = new LinkedList<String>();
+			for (String element : elementsArr) {
+				elements.add("\"" + element + "\"");
+			}
+			line = join(elements, ",");
 			String values = "("
-					+ line.replace("\"", "'").replace("\\N", "NULL") + ")";
+					+ line.replace("\"\\N\"", "NULL") + ")";
 			fw.write(insert + values + ";\n");
 			line = br.readLine();
 		}
