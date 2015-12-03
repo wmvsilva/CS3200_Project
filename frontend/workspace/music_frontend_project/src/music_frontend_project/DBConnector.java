@@ -461,7 +461,7 @@ public class DBConnector {
 			throws SQLException {
 		try (PreparedStatement statement = conn
 				.prepareStatement("CALL p_modify_single_release_date("
-						+ trackId + ")");
+						+ trackId + ", '" + newReleaseDate + "')");
 				ResultSet resultSet = statement.executeQuery()) {
 		}
 	}

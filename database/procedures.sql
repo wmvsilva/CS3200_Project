@@ -413,7 +413,7 @@ DROP PROCEDURE IF EXISTS p_modify_song_album;
 DELIMITER //
 CREATE PROCEDURE
 p_modify_song_album(IN given_song_id INT,
-						IN new_album_name INT, IN release_date_of_album DATE)
+						IN new_album_name VARCHAR(70), IN release_date_of_album DATE)
 BEGIN
     DECLARE new_album_id INT;
     SET new_album_id = 
@@ -491,5 +491,33 @@ BEGIN
 	DELETE FROM
 		general_song
 	WHERE song_id = given_song_id;
+END //
+DELIMITER ;
+
+select * from single_song;
+
+-- Release Date, Cover Art Filepath
+DROP PROCEDURE IF EXISTS p_base_single_info;
+DELIMITER //
+CREATE PROCEDURE
+p_base_single_info(IN given_track_id INT)
+BEGIN
+	SELECT
+		release_date, cover_art
+	FROM
+		single_song
+	WHERE
+		song_id = given_track_id;
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS p_modify_single_release_date;
+DELIMITER //
+CREATE PROCEDURE
+p_modify_single_release_date(IN given_track_id INT,
+						IN new_release_date DATE)
+BEGIN
+	UPDATE single_song SET release_date = new_release_date
+    WHERE song_id = given_track_id;
 END //
 DELIMITER ;

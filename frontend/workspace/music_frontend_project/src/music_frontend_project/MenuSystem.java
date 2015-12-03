@@ -240,7 +240,7 @@ public final class MenuSystem {
 		printOptions("Show Album", "Show Artist", "Show Ft Artist",
 				"Show Lyrics", "Play Audio Sample", "Show Cover Art", "Modify",
 				"Delete", "Main Menu");
-		Integer choice = provideUserPick(7);
+		Integer choice = provideUserPick(8);
 		switch (choice) {
 		case (0):
 			// Show Album
@@ -345,7 +345,7 @@ public final class MenuSystem {
 		Printer.info("" + count + ". Release Date: "
 				+ singleSongInfo.getValue0());
 
-		int userInput = provideUserPick(3 + artists.size() + ftArtists.size()
+		int userInput = provideUserPick(4 + artists.size() + ftArtists.size()
 				+ genres.size(), "Enter number to modify or 0 to go back:");
 
 		if (userInput == 0) {
