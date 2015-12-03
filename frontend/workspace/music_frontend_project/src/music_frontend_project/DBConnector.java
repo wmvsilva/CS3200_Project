@@ -465,4 +465,198 @@ public class DBConnector {
 				ResultSet resultSet = statement.executeQuery()) {
 		}
 	}
+
+	public void addNewArtist(String newArtist) throws SQLException {
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_add_artist('" + newArtist + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+	}
+
+	public void addNewGenre(String newGenre) throws SQLException {
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_add_genre('" + newGenre + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+	}
+
+	public void addNewStore(String newStoreName) throws SQLException {
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_add_store('" + newStoreName + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+	}
+
+	public void addNewFormat(String newFormatName) throws SQLException {
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_add_format('" + newFormatName + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+	}
+
+	public void addAlbum(String albumName, List<String> artists,
+			List<String> genres, String releaseDate,
+			List<Triplet<String, String, String>> storesPricesFormats,
+			String albumArtFilePath) throws SQLException {
+		// Add the album
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_add_album('" + albumName + "', '"
+						+ releaseDate + "', '" + albumArtFilePath + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+
+		// Find the albumId
+		int albumId = getAlbumId(albumName, releaseDate);
+
+		// Add the artists
+		for (String artist : artists) {
+			try (PreparedStatement statement = conn
+					.prepareStatement("CALL p_add_album_artist(" + albumId
+							+ ", '" + artist + "')");
+					ResultSet resultSet = statement.executeQuery()) {
+			}
+		}
+
+		// Add the genres
+		for (String genre : genres) {
+			try (PreparedStatement statement = conn
+					.prepareStatement("CALL p_add_album_genre(" + albumId
+							+ ", '" + genre + "')");
+					ResultSet resultSet = statement.executeQuery()) {
+			}
+		}
+
+		// Add the store, prices, formats
+		for (Triplet<String, String, String> storePriceFormat : storesPricesFormats) {
+			String storeName = storePriceFormat.getValue0();
+			String price = storePriceFormat.getValue1();
+			String format = storePriceFormat.getValue2();
+
+			try (PreparedStatement statement = conn
+					.prepareStatement("CALL p_add_album_distribution_and_pricing("
+							+ albumId
+							+ ", '"
+							+ storeName
+							+ "', "
+							+ price
+							+ ", '" + format + "')");
+					ResultSet resultSet = statement.executeQuery()) {
+			}
+		}
+	}
+
+	private int getAlbumId(String albumName, String releaseDate)
+			throws SQLException {
+		Integer result = null;
+
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_base_single_info('" + albumName
+						+ "', '" + releaseDate + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+			resultSet.next();
+			result = resultSet.getInt(1);
+		}
+
+		return result;
+	}
+
+	public void addSingle(String trackName, String trackNumber,
+			String albumName, String albumReleaseDate, List<String> artists,
+			List<String> ftArtists, List<String> genres, String lyricsFilePath,
+			String audioSampleFilePath, String releaseDate, String coverArt,
+			String trackLengthSeconds) throws SQLException {
+
+		int albumId = getAlbumId(albumName, albumReleaseDate);
+		Integer songId = null;
+		// Add the base song information
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_add_basic_song('" + trackName + "', "
+						+ trackNumber + ", " + albumId + ", "
+						+ trackLengthSeconds + ", '" + lyricsFilePath + "', '"
+						+ audioSampleFilePath + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+			songId = resultSet.getInt(1);
+		}
+
+		// Add the single song information
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_add_single_song(" + songId + ", '"
+						+ releaseDate + "', '" + coverArt + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+
+		// Add the artists
+		for (String artist : artists) {
+			try (PreparedStatement statement = conn
+					.prepareStatement("CALL p_add_song_artist(" + songId
+							+ ", '" + artist + "')");
+					ResultSet resultSet = statement.executeQuery()) {
+			}
+		}
+
+		// Add the ft artists
+		for (String ftArtist : ftArtists) {
+			try (PreparedStatement statement = conn
+					.prepareStatement("CALL p_add_song_ft_artist(" + songId
+							+ ", '" + ftArtist + "')");
+					ResultSet resultSet = statement.executeQuery()) {
+			}
+		}
+
+		// Add the genres
+		for (String genre : genres) {
+			try (PreparedStatement statement = conn
+					.prepareStatement("CALL p_add_song_genre(" + songId + ", '"
+							+ genre + "')");
+					ResultSet resultSet = statement.executeQuery()) {
+			}
+		}
+	}
+
+	public void addTrack(String trackName, String trackNumber,
+			String albumName, String albumReleaseDate, List<String> artists,
+			List<String> ftArtists, List<String> genres, String lyricsFilePath,
+			String audioSampleFilePath, String trackLengthSeconds)
+			throws SQLException {
+
+		int albumId = getAlbumId(albumName, albumReleaseDate);
+		Integer songId = null;
+		// Add the base song information
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_add_basic_song('" + trackName + "', "
+						+ trackNumber + ", " + albumId + ", "
+						+ trackLengthSeconds + ", '" + lyricsFilePath + "', '"
+						+ audioSampleFilePath + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+			songId = resultSet.getInt(1);
+		}
+
+		// Add the artists
+		for (String artist : artists) {
+			try (PreparedStatement statement = conn
+					.prepareStatement("CALL p_add_song_artist(" + songId
+							+ ", '" + artist + "')");
+					ResultSet resultSet = statement.executeQuery()) {
+			}
+		}
+
+		// Add the ft artists
+		for (String ftArtist : ftArtists) {
+			try (PreparedStatement statement = conn
+					.prepareStatement("CALL p_add_song_ft_artist(" + songId
+							+ ", '" + ftArtist + "')");
+					ResultSet resultSet = statement.executeQuery()) {
+			}
+		}
+
+		// Add the genres
+		for (String genre : genres) {
+			try (PreparedStatement statement = conn
+					.prepareStatement("CALL p_add_song_genre(" + songId + ", '"
+							+ genre + "')");
+					ResultSet resultSet = statement.executeQuery()) {
+			}
+		}
+
+	}
 }

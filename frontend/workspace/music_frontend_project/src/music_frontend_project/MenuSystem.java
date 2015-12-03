@@ -29,7 +29,8 @@ public final class MenuSystem {
 			searchMenu();
 			break;
 		case (1):
-			// addNewMenu();
+			AddNewMenu addNewMenu = new AddNewMenu(dbConn);
+			addNewMenu.addNewEntityMenu();
 			break;
 		case (2):
 			return;
@@ -746,7 +747,7 @@ public final class MenuSystem {
 		}
 	}
 
-	private String getUserInput() throws IOException {
+	static String getUserInput() throws IOException {
 		String result = null;
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -765,7 +766,7 @@ public final class MenuSystem {
 		return provideUserPick(maxPick, "Pick an option:");
 	}
 
-	private static Integer provideUserPick(int maxPick, String question)
+	static Integer provideUserPick(int maxPick, String question)
 			throws IOException {
 		Integer result = null;
 		Printer.info(question);
