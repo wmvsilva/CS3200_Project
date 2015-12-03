@@ -183,9 +183,227 @@ public final class MenuSystem {
 		if (!dbConn.isSingle(trackId)) {
 			viewGeneralSong(trackId);
 		} else {
-			// TODO viewSingle(trackId);
+			viewSingle(trackId);
 		}
 
+	}
+
+	private void viewSingle(int trackId) throws SQLException, IOException {
+		// Track Name, Track Number, Album Name, Album id, Lyric filepath,
+		// Sample filepath
+		Sextet<String, Integer, String, Integer, String, String> baseSongInfo = dbConn
+				.getBaseSongInfo(trackId);
+		// Release Date, Cover Art Filepath
+		Pair<String, String> singleSongInfo = dbConn.getSingleSongInfo(trackId);
+		// Artists
+		List<String> artists = dbConn.getSongArtists(trackId);
+		// Featured Artists
+		List<String> ftArtists = dbConn.getSongFtArtists(trackId);
+		// Genres
+		List<String> genres = dbConn.getGenres(trackId);
+
+		// Print all found information
+		Printer.info("Track Name: " + baseSongInfo.getValue0());
+		Printer.info("Track Number: " + baseSongInfo.getValue1());
+		Printer.info("Album: " + baseSongInfo.getValue2());
+		// Artists
+		String artistsDelim = "";
+		for (int i = 0; i < artists.size(); i++) {
+			artistsDelim += artists.get(i);
+			if (i != artists.size() - 1) {
+				artistsDelim += ",";
+			}
+		}
+		Printer.info("Artists: " + artistsDelim);
+		// Ft Artists
+		String ftArtistsDelim = "";
+		for (int i = 0; i < ftArtists.size(); i++) {
+			ftArtistsDelim += ftArtists.get(i);
+			if (i != ftArtists.size() - 1) {
+				ftArtistsDelim += ",";
+			}
+		}
+		Printer.info("Ft Artists: " + ftArtistsDelim);
+		// Genres
+		String genreDelim = "";
+		for (int i = 0; i < genres.size(); i++) {
+			genreDelim += genres.get(i);
+			if (i != genres.size() - 1) {
+				genreDelim += ",";
+			}
+		}
+		Printer.info("Genres: " + genreDelim);
+		// Release Date
+		Printer.info("Release Date: " + singleSongInfo.getValue0());
+
+		// Show menu
+		printOptions("Show Album", "Show Artist", "Show Ft Artist",
+				"Show Lyrics", "Play Audio Sample", "Show Cover Art", "Modify",
+				"Delete", "Main Menu");
+		Integer choice = provideUserPick(7);
+		switch (choice) {
+		case (0):
+			// Show Album
+			viewAlbum(baseSongInfo.getValue3());
+			break;
+		case (1):
+			// Show Artist
+			for (int i = 0; i < artists.size(); i++) {
+				Printer.info("" + i + ". " + artists.get(i));
+			}
+			int artistChoice = provideUserPick(artists.size() - 1);
+			viewArtist(artists.get(artistChoice));
+			break;
+		case (2):
+			// Show Ft Artist
+			if (ftArtists.isEmpty()) {
+				Printer.info("There are no featured artists.");
+				viewSong(trackId);
+				return;
+			}
+			for (int i = 0; i < ftArtists.size(); i++) {
+				Printer.info("" + i + ". " + ftArtists.get(i));
+			}
+			int ftArtistChoice = provideUserPick(ftArtists.size() - 1);
+			viewArtist(ftArtists.get(ftArtistChoice));
+			break;
+		case (3):
+			// Show Lyrics
+			String lyricFilepath = baseSongInfo.getValue4();
+			byte[] encoded = Files.readAllBytes(Paths.get(lyricFilepath));
+			String lyrics = new String(encoded, Charset.defaultCharset());
+			Printer.info("[Lyrics]");
+			Printer.info(lyrics);
+			viewSong(trackId);
+			break;
+		case (4):
+			// Play Audio Sample
+			MP3Player.playAudio(baseSongInfo.getValue5());
+			viewSong(trackId);
+			break;
+		case (5):
+			// Show Cover Art
+			String singleCoverArtFilePath = singleSongInfo.getValue1();
+			ImageViewer.viewImage(singleCoverArtFilePath);
+			viewSong(trackId);
+			break;
+		case (6):
+			// Modify
+			modifySingleSong(trackId);
+			break;
+		case (7):
+			// Delete
+			dbConn.deleteSong(trackId);
+			Printer.info("Song deleted.");
+			mainMenu();
+			break;
+		case (8):
+			// Main menu
+			mainMenu();
+			break;
+		}
+
+	}
+
+	private void modifySingleSong(int trackId) throws SQLException, IOException {
+		// Track Name, Track Number, Album Name, Album id, Lyric filepath,
+		// Sample filepath
+		Sextet<String, Integer, String, Integer, String, String> baseSongInfo = dbConn
+				.getBaseSongInfo(trackId);
+		// Release Date, Cover Art Filepath
+		Pair<String, String> singleSongInfo = dbConn.getSingleSongInfo(trackId);
+		// Artists
+		List<String> artists = dbConn.getSongArtists(trackId);
+		// Featured Artists
+		List<String> ftArtists = dbConn.getSongFtArtists(trackId);
+		// Genres
+		List<String> genres = dbConn.getGenres(trackId);
+
+		// Options
+		Printer.info("1. Track Name: " + baseSongInfo.getValue0());
+		Printer.info("2. Track Number: " + baseSongInfo.getValue1());
+		Printer.info("3. Album: " + baseSongInfo.getValue2());
+		int count = 4;
+		// Artists
+		for (int i = 0; i < artists.size(); i++) {
+			Printer.info("" + count + ". Artist: " + artists.get(i));
+			count++;
+		}
+		int countAfterArtist = count;
+		// Featured Artists
+		for (int i = 0; i < ftArtists.size(); i++) {
+			Printer.info("" + count + ". Ft Artist: " + ftArtists.get(i));
+			count++;
+		}
+		int countAfterFtArtist = count;
+		// Genres
+		for (int i = 0; i < genres.size(); i++) {
+			Printer.info("" + count + ". Genre: " + genres.get(i));
+			count++;
+		}
+		int countAfterGenre = count;
+		Printer.info("" + count + ". Release Date: "
+				+ singleSongInfo.getValue0());
+
+		int userInput = provideUserPick(3 + artists.size() + ftArtists.size()
+				+ genres.size(), "Enter number to modify or 0 to go back:");
+
+		if (userInput == 0) {
+			viewSong(trackId);
+			return;
+		} else if (userInput == 1) {
+			Printer.info("Enter a value:");
+			String newTrackName = getUserInput();
+			dbConn.modifyTrackName(trackId, newTrackName);
+			viewSong(trackId);
+			return;
+		} else if (userInput == 2) {
+			Printer.info("Enter a value:");
+			String newTrackNumber = getUserInput();
+			dbConn.modifyTrackNumber(trackId, newTrackNumber);
+			viewSong(trackId);
+			return;
+		} else if (userInput == 3) {
+			Printer.info("Enter the new album name:");
+			String newAlbum = getUserInput();
+			List<String> releaseDates = dbConn.getReleaseDatesOfAlbum(newAlbum);
+			for (String date : releaseDates) {
+				Printer.info(newAlbum + " - " + date);
+			}
+			Printer.info("Enter the new album release date:");
+			String newReleaseDate = getUserInput();
+			dbConn.modifySongAlbum(trackId, newAlbum, newReleaseDate);
+			viewSong(trackId);
+			return;
+		} else if (userInput < countAfterArtist) {
+			Printer.info("Enter a value:");
+			String newArtist = getUserInput();
+			String oldArtist = artists.get(userInput - 4);
+			dbConn.modifySongArtist(trackId, oldArtist, newArtist);
+			viewSong(trackId);
+			return;
+		} else if (userInput < countAfterFtArtist) {
+			Printer.info("Enter a value:");
+			String newFtArtist = getUserInput();
+			String oldFtArtist = ftArtists.get(userInput - 4 - artists.size());
+			dbConn.modifySongFtArtist(trackId, oldFtArtist, newFtArtist);
+			viewSong(trackId);
+			return;
+		} else if (userInput < countAfterGenre) {
+			Printer.info("Enter a value:");
+			String newGenre = getUserInput();
+			String oldGenre = genres.get(userInput - 4 - artists.size()
+					- ftArtists.size());
+			dbConn.modifySongGenre(trackId, oldGenre, newGenre);
+			viewSong(trackId);
+			return;
+		} else {
+			Printer.info("Enter a value:");
+			String newReleaseDate = getUserInput();
+			dbConn.modifySingleReleaseDate(trackId, newReleaseDate);
+			viewSong(trackId);
+			return;
+		}
 	}
 
 	private void viewGeneralSong(int trackId) throws SQLException, IOException {

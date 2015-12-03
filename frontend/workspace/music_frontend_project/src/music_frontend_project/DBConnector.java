@@ -441,4 +441,28 @@ public class DBConnector {
 				ResultSet resultSet = statement.executeQuery()) {
 		}
 	}
+
+	public Pair<String, String> getSingleSongInfo(int trackId)
+			throws SQLException {
+		Pair<String, String> result = null;
+
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_base_single_info(" + trackId + ")");
+				ResultSet resultSet = statement.executeQuery()) {
+			resultSet.next();
+			result = new Pair<String, String>(resultSet.getString(1),
+					resultSet.getString(2));
+		}
+
+		return result;
+	}
+
+	public void modifySingleReleaseDate(int trackId, String newReleaseDate)
+			throws SQLException {
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_modify_single_release_date("
+						+ trackId + ")");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+	}
 }
