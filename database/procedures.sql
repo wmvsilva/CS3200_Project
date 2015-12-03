@@ -494,8 +494,6 @@ BEGIN
 END //
 DELIMITER ;
 
-select * from single_song;
-
 -- Release Date, Cover Art Filepath
 DROP PROCEDURE IF EXISTS p_base_single_info;
 DELIMITER //
@@ -521,3 +519,236 @@ BEGIN
     WHERE song_id = given_track_id;
 END //
 DELIMITER ;
+
+-- p_get_album_id('" + albumName + "', '"+ releaseDate + "')"
+DROP PROCEDURE IF EXISTS p_get_album_id;
+DELIMITER //
+CREATE PROCEDURE
+p_get_album_id(IN given_album_name VARCHAR(45),
+						IN given_album_release_date DATE)
+BEGIN
+	SELECT
+		album_id
+	FROM
+		album
+	WHERE
+		album_name = given_album_name
+			AND
+		release_date = given_album_release_date;
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS p_add_basic_song;
+DELIMITER //
+CREATE PROCEDURE
+p_add_basic_song(IN given_track_name VARCHAR(45),
+						IN given_track_number INT,
+                        IN given_album_id INT,
+                        IN given_track_length INT,
+                        IN given_lyrics_file_path VARCHAR(45),
+                        IN given_audio_sample_file_path VARCHAR(45))
+BEGIN
+	INSERT 
+		INTO general_song(track_name,lyrics,audio_sample,length_seconds,album_id,track_number)
+	VALUES (
+		given_track_name, 
+        given_lyrics_file_path,
+        given_audio_sample_file_path,
+        given_track_length,
+        given_album_id,
+        given_track_number);
+	
+    SELECT
+		song_id
+	FROM
+		general_song
+	WHERE
+		track_name = given_track_name
+			AND
+		album_id = given_album_id;
+END //
+DELIMITER ;
+
+-- p_add_single_song(" + songId + ", '" + releaseDate + "', '" + coverArt + "')");
+DROP PROCEDURE IF EXISTS p_add_single_song;
+DELIMITER //
+CREATE PROCEDURE
+p_add_single_song(IN given_song_id INT,
+						IN given_track_release_date DATE,
+                        IN given_single_cover_art VARCHAR(45))
+BEGIN
+	INSERT INTO single_song(song_id,release_date,cover_art)
+	VALUES (
+		given_song_id,
+        given_track_release_date,
+        given_single_cover_art);
+END //
+DELIMITER ;
+
+-- "CALL p_add_song_artist(" + songId + ", '" + artist + "')");
+DROP PROCEDURE IF EXISTS p_add_song_artist;
+DELIMITER //
+CREATE PROCEDURE
+p_add_song_artist(IN given_song_id INT,
+					IN given_artist_name VARCHAR(45))
+BEGIN
+	INSERT INTO artists_of_songs(song_id, artist_name)
+	VALUES (
+		given_song_id,
+        given_artist_name);
+END //
+DELIMITER ;
+
+-- p_add_song_ft_artist
+DROP PROCEDURE IF EXISTS p_add_song_ft_artist;
+DELIMITER //
+CREATE PROCEDURE
+p_add_song_ft_artist(IN given_song_id INT,
+					IN given_ft_artist_name VARCHAR(45))
+BEGIN
+	INSERT INTO featured_artists_of_songs(song_id, featured_artist_name)
+	VALUES (
+		given_song_id,
+        given_ft_artist_name);
+END //
+DELIMITER ;
+
+-- p_add_song_genre
+DROP PROCEDURE IF EXISTS p_add_song_genre;
+DELIMITER //
+CREATE PROCEDURE
+p_add_song_genre(IN given_song_id INT,
+					IN given_genre_name VARCHAR(45))
+BEGIN
+	INSERT INTO genre_of_song(song_id, genre_name)
+	VALUES (
+		given_song_id,
+        given_genre_name);
+END //
+DELIMITER ;
+
+-- p_add_artist
+DROP PROCEDURE IF EXISTS p_add_artist;
+DELIMITER //
+CREATE PROCEDURE
+p_add_artist(IN new_artist_name VARCHAR(45))
+BEGIN
+	INSERT INTO artist(artist_name)
+	VALUES (
+		new_artist_name);
+END //
+DELIMITER ;
+
+-- "CALL p_add_album('" + albumName + "', '" + releaseDate + "', '" + albumArtFilePath + "')"
+DROP PROCEDURE IF EXISTS p_add_album;
+DELIMITER //
+CREATE PROCEDURE
+p_add_album(IN in_album_name VARCHAR(45),
+				IN in_release_date DATE,
+				IN in_album_art_file_path VARCHAR(45))
+BEGIN
+	INSERT INTO album(album_name, release_date, album_cover)
+	VALUES (
+		in_album_name,
+        in_release_date,
+        in_album_art_file_path);
+END //
+DELIMITER ;
+
+-- "CALL p_add_album_artist(" + albumId + ", '" + artist + "')");
+DROP PROCEDURE IF EXISTS p_add_album_artist;
+DELIMITER //
+CREATE PROCEDURE
+p_add_album_artist(IN in_album_id INT,
+					IN in_artist_name VARCHAR(45))
+BEGIN
+	INSERT INTO artists_of_albums(album_id, artist_name)
+	VALUES (
+		in_album_id,
+        in_artist_name);
+END //
+DELIMITER ;
+
+-- "CALL p_add_album_genre(" + albumId + ", '" + genre + "')");
+DROP PROCEDURE IF EXISTS p_add_album_genre;
+DELIMITER //
+CREATE PROCEDURE
+p_add_album_genre(IN in_album_id INT,
+					IN in_genre_name VARCHAR(45))
+BEGIN
+	INSERT INTO genre_of_album(album_id, genre_name)
+	VALUES (
+		in_album_id,
+        in_genre_name);
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS p_add_album_distribution_and_pricing;
+DELIMITER //
+CREATE PROCEDURE
+p_add_album_distribution_and_pricing(IN in_album_id INT,
+										IN in_store_name VARCHAR(45),
+                                        IN in_price DECIMAL(10, 2),
+                                        IN in_format VARCHAR(45))
+BEGIN
+
+	DECLARE new_distribution_id INT;
+    
+	INSERT INTO format_of_album(album_id, format_name)
+	VALUES (
+		in_album_id,
+        in_format);
+        
+    SET new_distribution_id = 
+		(SELECT
+			distribution_id
+		FROM
+			format_of_album
+		WHERE
+			album_id = in_album_id
+				AND
+			format_name = in_format);
+	
+    INSERT INTO store_catalog(store_name, distribution_id, album_price)
+    VALUES (
+		in_store_name,
+        new_distribution_id,
+        in_price);
+        
+	
+END //
+DELIMITER ;
+
+-- p_add_genre('" + newGenre + "')"
+DROP PROCEDURE IF EXISTS p_add_genre;
+DELIMITER //
+CREATE PROCEDURE
+p_add_genre(IN in_genre_name VARCHAR(45))
+BEGIN
+	INSERT INTO genre(genre_name)
+	VALUES (in_genre_name);
+END //
+DELIMITER ;
+
+-- p_add_store('" + newStoreName + "')");
+DROP PROCEDURE IF EXISTS p_add_store;
+DELIMITER //
+CREATE PROCEDURE
+p_add_store(IN in_store_name VARCHAR(45))
+BEGIN
+	INSERT INTO store(store_name)
+	VALUES (in_store_name);
+END //
+DELIMITER ;
+
+-- p_add_format('" + newFormatName + "')");
+DROP PROCEDURE IF EXISTS p_add_format;
+DELIMITER //
+CREATE PROCEDURE
+p_add_format(IN in_format_name VARCHAR(45))
+BEGIN
+	INSERT INTO music_format(format_name)
+	VALUES (in_format_name);
+END //
+DELIMITER ;
+

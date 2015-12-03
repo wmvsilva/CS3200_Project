@@ -525,21 +525,16 @@ public class DBConnector {
 					ResultSet resultSet = statement.executeQuery()) {
 			}
 		}
-
 		// Add the store, prices, formats
 		for (Triplet<String, String, String> storePriceFormat : storesPricesFormats) {
 			String storeName = storePriceFormat.getValue0();
 			String price = storePriceFormat.getValue1();
 			String format = storePriceFormat.getValue2();
-
+			String sqlStatement = "CALL p_add_album_distribution_and_pricing("
+					+ albumId + ", '" + storeName + "', " + price + ", '"
+					+ format + "')";
 			try (PreparedStatement statement = conn
-					.prepareStatement("CALL p_add_album_distribution_and_pricing("
-							+ albumId
-							+ ", '"
-							+ storeName
-							+ "', "
-							+ price
-							+ ", '" + format + "')");
+					.prepareStatement(sqlStatement);
 					ResultSet resultSet = statement.executeQuery()) {
 			}
 		}
@@ -550,8 +545,8 @@ public class DBConnector {
 		Integer result = null;
 
 		try (PreparedStatement statement = conn
-				.prepareStatement("CALL p_base_single_info('" + albumName
-						+ "', '" + releaseDate + "')");
+				.prepareStatement("CALL p_get_album_id('" + albumName + "', '"
+						+ releaseDate + "')");
 				ResultSet resultSet = statement.executeQuery()) {
 			resultSet.next();
 			result = resultSet.getInt(1);
@@ -570,11 +565,12 @@ public class DBConnector {
 		Integer songId = null;
 		// Add the base song information
 		try (PreparedStatement statement = conn
-				.prepareStatement("CALL p_add_basic_song('" + trackName + "', "
-						+ trackNumber + ", " + albumId + ", "
-						+ trackLengthSeconds + ", '" + lyricsFilePath + "', '"
-						+ audioSampleFilePath + "')");
+				.prepareStatement("CALL p_add_basic_song(\"" + trackName
+						+ "\", " + trackNumber + ", " + albumId + ", "
+						+ trackLengthSeconds + ", \"" + lyricsFilePath
+						+ "\", \"" + audioSampleFilePath + "\")");
 				ResultSet resultSet = statement.executeQuery()) {
+			resultSet.next();
 			songId = resultSet.getInt(1);
 		}
 
@@ -622,12 +618,13 @@ public class DBConnector {
 		int albumId = getAlbumId(albumName, albumReleaseDate);
 		Integer songId = null;
 		// Add the base song information
-		try (PreparedStatement statement = conn
-				.prepareStatement("CALL p_add_basic_song('" + trackName + "', "
-						+ trackNumber + ", " + albumId + ", "
-						+ trackLengthSeconds + ", '" + lyricsFilePath + "', '"
-						+ audioSampleFilePath + "')");
+		String strStmt = "CALL p_add_basic_song(\"" + trackName + "\", "
+				+ trackNumber + ", " + albumId + ", " + trackLengthSeconds
+				+ ", \"" + lyricsFilePath + "\", \"" + audioSampleFilePath
+				+ "\")";
+		try (PreparedStatement statement = conn.prepareStatement(strStmt);
 				ResultSet resultSet = statement.executeQuery()) {
+			resultSet.next();
 			songId = resultSet.getInt(1);
 		}
 

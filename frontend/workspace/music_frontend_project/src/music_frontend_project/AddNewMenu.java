@@ -91,16 +91,16 @@ public class AddNewMenu {
 		Printer.info("Enter the release date:");
 		String releaseDate = MenuSystem.getUserInput();
 		// Get stores, prices, formats
-		Printer.info("Enter the comma-separated values in the form 'store|price|format':");
+		Printer.info("Enter the comma-separated values in the form 'store;price;format':");
 		String givenStoresPricesFormats = MenuSystem.getUserInput();
 		List<String> pipeDelimitedStoresPricesFormats = Arrays
 				.asList(givenStoresPricesFormats.split(","));
 		List<Triplet<String, String, String>> storesPricesFormats = new LinkedList<Triplet<String, String, String>>();
 		for (String s : pipeDelimitedStoresPricesFormats) {
-			String[] splitPipes = s.split("|");
-			String storeName = splitPipes[0];
-			String price = splitPipes[1];
-			String format = splitPipes[2];
+			List<String> splitPipes = Arrays.asList(s.split(";"));
+			String storeName = splitPipes.get(0);
+			String price = splitPipes.get(1);
+			String format = splitPipes.get(2);
 			Triplet<String, String, String> triplet = new Triplet<String, String, String>(
 					storeName, price, format);
 			storesPricesFormats.add(triplet);
@@ -143,6 +143,10 @@ public class AddNewMenu {
 		Printer.info("Enter the album name:");
 		String albumName = MenuSystem.getUserInput();
 		// Get the album release date
+		List<String> releaseDates = dbConn.getReleaseDatesOfAlbum(albumName);
+		for (String date : releaseDates) {
+			Printer.info(albumName + " - " + date);
+		}
 		Printer.info("Enter the album release date:");
 		String albumReleaseDate = MenuSystem.getUserInput();
 		// Get the artist names
