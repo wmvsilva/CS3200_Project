@@ -79,8 +79,6 @@ public final class MenuSystem {
 			}
 		}
 
-		int countAfterSongs = count;
-
 		int userPick = provideUserPick(
 				searchedArtists.size() + searchedAlbums.size()
 						+ searchedSongs.size(),
@@ -122,6 +120,15 @@ public final class MenuSystem {
 			}
 		}
 		Printer.info("Artists: " + artistsDelimited);
+
+		String genresDelimited = "";
+		for (int i = 0; i < genres.size(); i++) {
+			artistsDelimited += genres.get(i);
+			if (i != genres.size() - 1) {
+				genresDelimited += ",";
+			}
+		}
+		Printer.info(genresDelimited);
 
 		Printer.info("Release Date: " + albumInfo.getValue1());
 
