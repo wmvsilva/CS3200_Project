@@ -1,6 +1,7 @@
 package music_frontend_project;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Paths;
@@ -11,15 +12,25 @@ import javafx.scene.media.MediaPlayer;
 
 public final class MP3Player {
 
-	public static void playAudio(String filepath) throws IOException {
+	static final String SEARCH_PATH = "./resources/audio_samples/";
+
+	public static void playAudio(String fileName) throws IOException {
+		String filePath = SEARCH_PATH + fileName;
+		File f = new File(filePath);
+		if (!f.exists() || f.isDirectory()) {
+			Printer.err("Could not find file " + filePath);
+			Printer.infoln();
+			return;
+		}
+
 		// fxPanel required to initialize toolkit
 		@SuppressWarnings("unused")
 		JFXPanel fxPanel = new JFXPanel();
-		Media media = new Media(Paths.get(filepath).toUri().toString());
+		Media media = new Media(Paths.get(filePath).toUri().toString());
 		MediaPlayer mp = new MediaPlayer(media);
 		mp.play();
 
-		System.out.println("Playing...");
+		Printer.info("Playing... Press enter to continue.");
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		br.readLine();
 

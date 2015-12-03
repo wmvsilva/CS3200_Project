@@ -39,4 +39,8 @@ public final class Printer {
 		System.err.println(msg);
 	}
 
+	public static void infoln() {
+		System.out.println();
+	}
+
 }

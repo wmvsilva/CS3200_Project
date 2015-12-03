@@ -65,6 +65,7 @@ public class SearchMenu {
 				count++;
 			}
 		}
+		Printer.infoln();
 
 		int userPick = UserInteraction.provideUserPick(searchedArtists.size()
 				+ searchedAlbums.size() + searchedSongs.size(),
