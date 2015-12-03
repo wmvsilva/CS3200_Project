@@ -26,7 +26,7 @@ public class AddNewMenu {
 		Printer.info("6. Format");
 
 		// Get user input
-		int userPick = MenuSystem.provideUserPick(6,
+		int userPick = UserInteraction.provideUserPick(6,
 				"Enter a number or 0 to go to the Main Menu:");
 
 		// Go to next menu
@@ -42,7 +42,7 @@ public class AddNewMenu {
 		case (2):
 			// Add artist
 			Printer.info("Enter the new artist name:");
-			String newArtist = MenuSystem.getUserInput();
+			String newArtist = UserInteraction.getUserInput();
 			dbConn.addNewArtist(newArtist);
 			addNewEntityMenu();
 			break;
@@ -53,21 +53,21 @@ public class AddNewMenu {
 		case (4):
 			// Add Genre
 			Printer.info("Enter the new genre:");
-			String newGenre = MenuSystem.getUserInput();
+			String newGenre = UserInteraction.getUserInput();
 			dbConn.addNewGenre(newGenre);
 			addNewEntityMenu();
 			break;
 		case (5):
 			// Add Store
 			Printer.info("Enter the new store's name:");
-			String newStoreName = MenuSystem.getUserInput();
+			String newStoreName = UserInteraction.getUserInput();
 			dbConn.addNewStore(newStoreName);
 			addNewEntityMenu();
 			break;
 		case (6):
 			// Add Format
 			Printer.info("Enter the new format name");
-			String newFormatName = MenuSystem.getUserInput();
+			String newFormatName = UserInteraction.getUserInput();
 			dbConn.addNewFormat(newFormatName);
 			addNewEntityMenu();
 			break;
@@ -78,21 +78,21 @@ public class AddNewMenu {
 		Printer.info("Album:");
 		// Get album name
 		Printer.info("Enter album name:");
-		String albumName = MenuSystem.getUserInput();
+		String albumName = UserInteraction.getUserInput();
 		// Get artist names
 		Printer.info("Enter the artist names:");
-		String givenArtists = MenuSystem.getUserInput();
+		String givenArtists = UserInteraction.getUserInput();
 		List<String> artists = Arrays.asList(givenArtists.split(","));
 		// Get genres
 		Printer.info("Enter the genre names:");
-		String givenGenres = MenuSystem.getUserInput();
+		String givenGenres = UserInteraction.getUserInput();
 		List<String> genres = Arrays.asList(givenGenres.split(","));
 		// Get release date
 		Printer.info("Enter the release date:");
-		String releaseDate = MenuSystem.getUserInput();
+		String releaseDate = UserInteraction.getUserInput();
 		// Get stores, prices, formats
 		Printer.info("Enter the comma-separated values in the form 'store;price;format':");
-		String givenStoresPricesFormats = MenuSystem.getUserInput();
+		String givenStoresPricesFormats = UserInteraction.getUserInput();
 		List<String> pipeDelimitedStoresPricesFormats = Arrays
 				.asList(givenStoresPricesFormats.split(","));
 		List<Triplet<String, String, String>> storesPricesFormats = new LinkedList<Triplet<String, String, String>>();
@@ -107,7 +107,7 @@ public class AddNewMenu {
 		}
 		// Get album art file path
 		Printer.info("Enter the album art file path:");
-		String albumArtFilePath = MenuSystem.getUserInput();
+		String albumArtFilePath = UserInteraction.getUserInput();
 
 		// Add the album
 		dbConn.addAlbum(albumName, artists, genres, releaseDate,
@@ -123,7 +123,7 @@ public class AddNewMenu {
 	private void addSongMenu() throws IOException, SQLException {
 		Printer.info("1. Single");
 		Printer.info("2. Album Track");
-		int userPick = MenuSystem.provideUserPick(2,
+		int userPick = UserInteraction.provideUserPick(2,
 				"Enter a number or 0 to go to the Main Menu:");
 
 		if (userPick == 0) {
@@ -135,44 +135,44 @@ public class AddNewMenu {
 
 		// Get the track name
 		Printer.info("Enter the track name:");
-		String trackName = MenuSystem.getUserInput();
+		String trackName = UserInteraction.getUserInput();
 		// Get the track number
 		Printer.info("Enter the track number:");
-		String trackNumber = MenuSystem.getUserInput();
+		String trackNumber = UserInteraction.getUserInput();
 		// Get the album name
 		Printer.info("Enter the album name:");
-		String albumName = MenuSystem.getUserInput();
+		String albumName = UserInteraction.getUserInput();
 		// Get the album release date
 		List<String> releaseDates = dbConn.getReleaseDatesOfAlbum(albumName);
 		for (String date : releaseDates) {
 			Printer.info(albumName + " - " + date);
 		}
 		Printer.info("Enter the album release date:");
-		String albumReleaseDate = MenuSystem.getUserInput();
+		String albumReleaseDate = UserInteraction.getUserInput();
 		// Get the artist names
 		Printer.info("Enter a comma-delimited list of artists:");
-		String givenArtists = MenuSystem.getUserInput();
+		String givenArtists = UserInteraction.getUserInput();
 		List<String> artists = new LinkedList<String>();
 		artists.addAll(Arrays.asList(givenArtists.split(",")));
 		// Get the ft artists names
 		Printer.info("Enter a comma-delimited list of ft artists:");
-		String givenFtArtists = MenuSystem.getUserInput();
+		String givenFtArtists = UserInteraction.getUserInput();
 		List<String> ftArtists = new LinkedList<String>();
 		ftArtists.addAll(Arrays.asList(givenFtArtists.split(",")));
 		// Get the genres
 		Printer.info("Enter a comma-delimited list of genres:");
-		String givenGenres = MenuSystem.getUserInput();
+		String givenGenres = UserInteraction.getUserInput();
 		List<String> genres = new LinkedList<String>();
 		genres.addAll(Arrays.asList(givenGenres.split(",")));
 		// Get the file path of lyrics
 		Printer.info("Enter the filepath of the lyrics text file:");
-		String lyricsFilePath = MenuSystem.getUserInput();
+		String lyricsFilePath = UserInteraction.getUserInput();
 		// Get the file path of the audio sample
 		Printer.info("Enter the filepath of the audio sample");
-		String audioSampleFilePath = MenuSystem.getUserInput();
+		String audioSampleFilePath = UserInteraction.getUserInput();
 		// Get the length of the track in seconds
 		Printer.info("Enter the length of the track in seconds:");
-		String trackLengthSeconds = MenuSystem.getUserInput();
+		String trackLengthSeconds = UserInteraction.getUserInput();
 
 		// Get single attributes
 		String releaseDate = null;
@@ -180,10 +180,10 @@ public class AddNewMenu {
 		if (isSingle) {
 			// Get release date
 			Printer.info("Enter the release date:");
-			releaseDate = MenuSystem.getUserInput();
+			releaseDate = UserInteraction.getUserInput();
 			// Get cover art
 			Printer.info("Enter the file path of the cover art:");
-			coverArt = MenuSystem.getUserInput();
+			coverArt = UserInteraction.getUserInput();
 		}
 
 		if (isSingle) {
