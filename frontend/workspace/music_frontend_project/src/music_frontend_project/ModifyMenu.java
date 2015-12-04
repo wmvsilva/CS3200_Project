@@ -73,7 +73,7 @@ public class ModifyMenu {
 		} else if (userInput == 2) {
 			Printer.info("Enter a value:");
 			String newTrackNumber = UserInteraction.getUserInput();
-			dbConn.modifyTrackNumber(trackId, newTrackNumber);
+			modifyTrackNumber(trackId, newTrackNumber);
 			viewSong(trackId);
 			return;
 		} else if (userInput == 3) {
@@ -123,12 +123,36 @@ public class ModifyMenu {
 			viewSong(trackId);
 			return;
 		} else {
-			Printer.info("Enter a value:");
+			Printer.info("Enter a value in the format yyyy-mm-dd:");
 			String newReleaseDate = UserInteraction.getUserInput();
+			while (!Utility.isValidDate(newReleaseDate)) {
+				Printer.err("Not a valid date. Please enter in a valid date in the format yyyy-mm-dd:");
+				newReleaseDate = UserInteraction.getUserInput();
+			}
 			dbConn.modifySingleReleaseDate(trackId, newReleaseDate);
 			viewSong(trackId);
 			return;
 		}
+	}
+
+	private void modifyTrackNumber(int trackId, String newTrackNumber)
+			throws SQLException, IOException {
+		Integer intTrackNumber = null;
+		try {
+			intTrackNumber = Integer.parseInt(newTrackNumber);
+		} catch (NumberFormatException e) {
+			Printer.info("Please enter a number: ");
+			newTrackNumber = UserInteraction.getUserInput();
+			modifyTrackNumber(trackId, newTrackNumber);
+			return;
+		}
+		while (intTrackNumber < 0) {
+			Printer.info("Please enter a non-negative number:");
+			newTrackNumber = UserInteraction.getUserInput();
+			modifyTrackNumber(trackId, newTrackNumber);
+			return;
+		}
+		dbConn.modifyTrackNumber(trackId, newTrackNumber);
 	}
 
 	private void modifySongGenre(int trackId, String oldGenre, String newGenre)
@@ -202,7 +226,7 @@ public class ModifyMenu {
 		} else if (userInput == 2) {
 			Printer.info("Enter a value:");
 			String newTrackNumber = UserInteraction.getUserInput();
-			dbConn.modifyTrackNumber(trackId, newTrackNumber);
+			modifyTrackNumber(trackId, newTrackNumber);
 			viewSong(trackId);
 			return;
 		} else if (userInput == 3) {

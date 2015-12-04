@@ -105,7 +105,7 @@ public class SearchMenu {
 		for (int i = 0; i < artists.size(); i++) {
 			artistsDelimited += artists.get(i);
 			if (i != artists.size() - 1) {
-				artistsDelimited += ",";
+				artistsDelimited += ", ";
 			}
 		}
 		Printer.info("Artists: " + artistsDelimited);
@@ -114,7 +114,7 @@ public class SearchMenu {
 		for (int i = 0; i < genres.size(); i++) {
 			artistsDelimited += genres.get(i);
 			if (i != genres.size() - 1) {
-				genresDelimited += ",";
+				genresDelimited += ", ";
 			}
 		}
 		Printer.info(genresDelimited);
@@ -211,7 +211,7 @@ public class SearchMenu {
 		for (int i = 0; i < artists.size(); i++) {
 			artistsDelim += artists.get(i);
 			if (i != artists.size() - 1) {
-				artistsDelim += ",";
+				artistsDelim += ", ";
 			}
 		}
 		Printer.info("Artists: " + artistsDelim);
@@ -220,7 +220,7 @@ public class SearchMenu {
 		for (int i = 0; i < ftArtists.size(); i++) {
 			ftArtistsDelim += ftArtists.get(i);
 			if (i != ftArtists.size() - 1) {
-				ftArtistsDelim += ",";
+				ftArtistsDelim += ", ";
 			}
 		}
 		Printer.info("Ft Artists: " + ftArtistsDelim);
@@ -229,12 +229,13 @@ public class SearchMenu {
 		for (int i = 0; i < genres.size(); i++) {
 			genreDelim += genres.get(i);
 			if (i != genres.size() - 1) {
-				genreDelim += ",";
+				genreDelim += ", ";
 			}
 		}
 		Printer.info("Genres: " + genreDelim);
 		// Release Date
 		Printer.info("Release Date: " + singleSongInfo.getValue0());
+		Printer.infoln();
 
 		// Show menu
 		UserInteraction.printOptions("Show Album", "Show Artist",
@@ -248,9 +249,12 @@ public class SearchMenu {
 			break;
 		case (1):
 			// Show Artist
+			Printer.info("[Artists of this song]");
 			for (int i = 0; i < artists.size(); i++) {
 				Printer.info("" + i + ". " + artists.get(i));
 			}
+			Printer.infoln();
+
 			int artistChoice = UserInteraction
 					.provideUserPick(artists.size() - 1);
 			viewArtist(artists.get(artistChoice));
@@ -259,12 +263,16 @@ public class SearchMenu {
 			// Show Ft Artist
 			if (ftArtists.isEmpty()) {
 				Printer.info("There are no featured artists.");
+				Printer.infoln();
 				viewSong(trackId);
 				return;
 			}
+			Printer.info("[Featured Artists of this song]");
 			for (int i = 0; i < ftArtists.size(); i++) {
 				Printer.info("" + i + ". " + ftArtists.get(i));
 			}
+			Printer.infoln();
+
 			int ftArtistChoice = UserInteraction.provideUserPick(ftArtists
 					.size() - 1);
 			viewArtist(ftArtists.get(ftArtistChoice));
@@ -283,7 +291,7 @@ public class SearchMenu {
 		case (5):
 			// Show Cover Art
 			String singleCoverArtFilePath = singleSongInfo.getValue1();
-			ImageViewer.viewImage(singleCoverArtFilePath);
+			ImageViewer.viewSingleCoverArtImage(singleCoverArtFilePath);
 			viewSong(trackId);
 			break;
 		case (6):
