@@ -479,20 +479,31 @@ public class SearchMenu {
 			Pair<String, Integer> p = albumsByArtist.get(i);
 			albumDelimited += p.getValue0();
 			if (i != albumsByArtist.size() - 1) {
-				albumDelimited += ",";
+				albumDelimited += ", ";
 			}
 		}
 		Printer.info(albumDelimited);
 		Printer.infoln();
 		UserInteraction.printOptions("View Album", "Modify", "Delete",
 				"Main Menu");
+		Printer.infoln();
+
 		Integer choice = UserInteraction.provideUserPick(3);
 		switch (choice) {
 		case (0):
+			if (albumsByArtist.isEmpty()) {
+				Printer.err("Artist has no albums.");
+				viewArtist(artist);
+				return;
+			}
+
+			Printer.info("[Albums]");
 			for (int i = 0; i < albumsByArtist.size(); i++) {
 				String albumName = albumsByArtist.get(i).getValue0();
 				Printer.info("" + i + ". " + albumName);
 			}
+			Printer.infoln();
+
 			Integer albumChoice = UserInteraction
 					.provideUserPick(albumsByArtist.size() - 1);
 			int albumId = albumsByArtist.get(albumChoice).getValue1();

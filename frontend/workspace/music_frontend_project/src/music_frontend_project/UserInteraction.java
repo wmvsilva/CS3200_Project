@@ -21,6 +21,11 @@ public class UserInteraction {
 
 	static Integer provideUserPick(int maxPick, String question)
 			throws IOException {
+		if (maxPick < 0) {
+			Printer.err("No options available.");
+			throw new IOException(
+					"No options available. This error should have been caught. Please let us know so we can fix this error!");
+		}
 		Integer result = null;
 		Printer.info(question);
 
