@@ -498,10 +498,14 @@ public class DBConnector {
 			List<String> genres, String releaseDate,
 			List<Triplet<String, String, String>> storesPricesFormats,
 			String albumArtFilePath) throws SQLException {
+		String albumArtFilePathToUse = albumArtFilePath;
+		if (!albumArtFilePathToUse.equalsIgnoreCase("NULL")) {
+			albumArtFilePathToUse = "\"" + albumArtFilePathToUse + "\"";
+		}
 		// Add the album
 		try (PreparedStatement statement = conn
-				.prepareStatement("CALL p_add_album('" + albumName + "', '"
-						+ releaseDate + "', '" + albumArtFilePath + "')");
+				.prepareStatement("CALL p_add_album(\"" + albumName + "\", '"
+						+ releaseDate + "', " + albumArtFilePathToUse + ")");
 				ResultSet resultSet = statement.executeQuery()) {
 		}
 

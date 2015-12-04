@@ -113,18 +113,32 @@ public class AddNewMenu {
 		Printer.info("Enter album name:");
 		String albumName = UserInteraction.getUserInput();
 		// Get artist names
-		Printer.info("Enter the artist names:");
+		Printer.info("Enter the comma-delimited artist names (no spaces after commas):");
 		String givenArtists = UserInteraction.getUserInput();
 		List<String> artists = Arrays.asList(givenArtists.split(","));
+		for (String artist : artists) {
+			if (!dbConn.doesArtistExist(artist)) {
+				Printer.err("Artist " + artist + " does not exist.");
+				addNewEntityMenu();
+				return;
+			}
+		}
 		// Get genres
-		Printer.info("Enter the genre names:");
+		Printer.info("Enter the comma-delimited genre names (no spaces after commas):");
 		String givenGenres = UserInteraction.getUserInput();
 		List<String> genres = Arrays.asList(givenGenres.split(","));
+		for (String genre : genres) {
+			if (!dbConn.doesGenreExist(genre)) {
+				Printer.err("Genre " + genre + " does not exist.");
+				addNewEntityMenu();
+				return;
+			}
+		}
 		// Get release date
-		Printer.info("Enter the release date:");
-		String releaseDate = UserInteraction.getUserInput();
+		Printer.info("Enter the release date in the format yyyy-mm-dd:");
+		String releaseDate = UserInteraction.getDateFromUser();
 		// Get stores, prices, formats
-		Printer.info("Enter the comma-separated values in the form 'store;price;format':");
+		Printer.info("Enter the comma-separated values in the form store;price;format (no spaces after comma):");
 		String givenStoresPricesFormats = UserInteraction.getUserInput();
 		List<String> pipeDelimitedStoresPricesFormats = Arrays
 				.asList(givenStoresPricesFormats.split(","));
@@ -132,19 +146,31 @@ public class AddNewMenu {
 		for (String s : pipeDelimitedStoresPricesFormats) {
 			List<String> splitPipes = Arrays.asList(s.split(";"));
 			String storeName = splitPipes.get(0);
+			if (!dbConn.doesStoreExist(storeName)) {
+				Printer.err("Store " + storeName + " not in database.");
+				addNewEntityMenu();
+				return;
+			}
 			String price = splitPipes.get(1);
 			String format = splitPipes.get(2);
+			if (!dbConn.doesFormatExist(format)) {
+				Printer.err("Format " + format + " not in database.");
+				addNewEntityMenu();
+				return;
+			}
 			Triplet<String, String, String> triplet = new Triplet<String, String, String>(
 					storeName, price, format);
 			storesPricesFormats.add(triplet);
 		}
 		// Get album art file path
-		Printer.info("Enter the album art file path:");
+		Printer.info("Enter the album art file path (enter NULL if no value):");
+		Printer.info("(This file should be in resources/album_cover_art/):");
 		String albumArtFilePath = UserInteraction.getUserInput();
 
 		// Add the album
 		dbConn.addAlbum(albumName, artists, genres, releaseDate,
 				storesPricesFormats, albumArtFilePath);
+		Printer.info("Album added to database.");
 		addNewEntityMenu();
 	}
 
@@ -195,7 +221,7 @@ public class AddNewMenu {
 			return;
 		}
 		// Get the artist names
-		Printer.info("Enter a comma-delimited list of artists:");
+		Printer.info("Enter a comma-delimited list of artists (no spaces after comma):");
 		String givenArtists = UserInteraction.getUserInput();
 		List<String> artists = new LinkedList<String>();
 		artists.addAll(Arrays.asList(givenArtists.split(",")));
@@ -223,7 +249,7 @@ public class AddNewMenu {
 			Printer.info("No featured artists entered.");
 		}
 		// Get the genres
-		Printer.info("Enter a comma-delimited list of genres:");
+		Printer.info("Enter a comma-delimited list of genres (no spaces after comma):");
 		String givenGenres = UserInteraction.getUserInput();
 		List<String> genres = new LinkedList<String>();
 		genres.addAll(Arrays.asList(givenGenres.split(",")));
