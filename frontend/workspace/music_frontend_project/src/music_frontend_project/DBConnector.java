@@ -266,7 +266,7 @@ public class DBConnector {
 	}
 
 	public void modifyPriceCatalog(Integer albumId, String oldStoreName,
-			Double oldPrice, String oldFormat, String newValue)
+			Double oldPrice, String oldFormat, Double newValue)
 			throws SQLException {
 		try (PreparedStatement statement = conn
 				.prepareStatement("CALL p_modify_album_price_catalog("
@@ -440,5 +440,294 @@ public class DBConnector {
 				.prepareStatement("CALL p_delete_song(" + trackId + ")");
 				ResultSet resultSet = statement.executeQuery()) {
 		}
+	}
+
+	public Pair<String, String> getSingleSongInfo(int trackId)
+			throws SQLException {
+		Pair<String, String> result = null;
+
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_base_single_info(" + trackId + ")");
+				ResultSet resultSet = statement.executeQuery()) {
+			resultSet.next();
+			result = new Pair<String, String>(resultSet.getString(1),
+					resultSet.getString(2));
+		}
+
+		return result;
+	}
+
+	public void modifySingleReleaseDate(int trackId, String newReleaseDate)
+			throws SQLException {
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_modify_single_release_date("
+						+ trackId + ", '" + newReleaseDate + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+	}
+
+	public void addNewArtist(String newArtist) throws SQLException {
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_add_artist('" + newArtist + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+	}
+
+	public void addNewGenre(String newGenre) throws SQLException {
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_add_genre('" + newGenre + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+	}
+
+	public void addNewStore(String newStoreName) throws SQLException {
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_add_store('" + newStoreName + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+	}
+
+	public void addNewFormat(String newFormatName) throws SQLException {
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_add_format('" + newFormatName + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+	}
+
+	public void addAlbum(String albumName, List<String> artists,
+			List<String> genres, String releaseDate,
+			List<Triplet<String, String, String>> storesPricesFormats,
+			String albumArtFilePath) throws SQLException {
+		String albumArtFilePathToUse = albumArtFilePath;
+		if (!albumArtFilePathToUse.equalsIgnoreCase("NULL")) {
+			albumArtFilePathToUse = "\"" + albumArtFilePathToUse + "\"";
+		}
+		// Add the album
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_add_album(\"" + albumName + "\", '"
+						+ releaseDate + "', " + albumArtFilePathToUse + ")");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+
+		// Find the albumId
+		int albumId = getAlbumId(albumName, releaseDate);
+
+		// Add the artists
+		for (String artist : artists) {
+			try (PreparedStatement statement = conn
+					.prepareStatement("CALL p_add_album_artist(" + albumId
+							+ ", '" + artist + "')");
+					ResultSet resultSet = statement.executeQuery()) {
+			}
+		}
+
+		// Add the genres
+		for (String genre : genres) {
+			try (PreparedStatement statement = conn
+					.prepareStatement("CALL p_add_album_genre(" + albumId
+							+ ", '" + genre + "')");
+					ResultSet resultSet = statement.executeQuery()) {
+			}
+		}
+		// Add the store, prices, formats
+		for (Triplet<String, String, String> storePriceFormat : storesPricesFormats) {
+			String storeName = storePriceFormat.getValue0();
+			String price = storePriceFormat.getValue1();
+			String format = storePriceFormat.getValue2();
+			String sqlStatement = "CALL p_add_album_distribution_and_pricing("
+					+ albumId + ", '" + storeName + "', " + price + ", '"
+					+ format + "')";
+			try (PreparedStatement statement = conn
+					.prepareStatement(sqlStatement);
+					ResultSet resultSet = statement.executeQuery()) {
+			}
+		}
+	}
+
+	private int getAlbumId(String albumName, String releaseDate)
+			throws SQLException {
+		Integer result = null;
+
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_get_album_id('" + albumName + "', '"
+						+ releaseDate + "')");
+				ResultSet resultSet = statement.executeQuery()) {
+			resultSet.next();
+			result = resultSet.getInt(1);
+		}
+
+		return result;
+	}
+
+	public void addSingle(String trackName, Integer trackNumber,
+			String albumName, String albumReleaseDate, List<String> artists,
+			List<String> ftArtists, List<String> genres, String lyricsFilePath,
+			String audioSampleFilePath, String releaseDate, String coverArt,
+			Integer trackLengthSeconds) throws SQLException {
+		// Lyrics filepath
+		String lyricsFilePathToUse = lyricsFilePath;
+		if (!lyricsFilePathToUse.equalsIgnoreCase("NULL")) {
+			lyricsFilePathToUse = "\"" + lyricsFilePathToUse + "\"";
+		}
+		// Audio sample filepath
+		String audioSampleFilePathToUse = audioSampleFilePath;
+		if (!audioSampleFilePathToUse.equalsIgnoreCase("NULL")) {
+			audioSampleFilePathToUse = "\"" + audioSampleFilePathToUse + "\"";
+		}
+		// Cover Art to use
+		String coverArtToUse = coverArt;
+		if (!coverArtToUse.equalsIgnoreCase("NULL")) {
+			coverArtToUse = "\"" + coverArtToUse + "\"";
+		}
+
+		int albumId = getAlbumId(albumName, albumReleaseDate);
+		Integer songId = null;
+		// Add the base song information
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_add_basic_song(\"" + trackName
+						+ "\", " + trackNumber + ", " + albumId + ", "
+						+ trackLengthSeconds + ", " + lyricsFilePathToUse
+						+ ", " + audioSampleFilePathToUse + ")");
+				ResultSet resultSet = statement.executeQuery()) {
+			resultSet.next();
+			songId = resultSet.getInt(1);
+		}
+
+		// Add the single song information
+		try (PreparedStatement statement = conn
+				.prepareStatement("CALL p_add_single_song(" + songId + ", '"
+						+ releaseDate + "', " + coverArtToUse + ")");
+				ResultSet resultSet = statement.executeQuery()) {
+		}
+
+		// Add the artists
+		for (String artist : artists) {
+			try (PreparedStatement statement = conn
+					.prepareStatement("CALL p_add_song_artist(" + songId
+							+ ", '" + artist + "')");
+					ResultSet resultSet = statement.executeQuery()) {
+			}
+		}
+
+		// Add the ft artists
+		for (String ftArtist : ftArtists) {
+			try (PreparedStatement statement = conn
+					.prepareStatement("CALL p_add_song_ft_artist(" + songId
+							+ ", '" + ftArtist + "')");
+					ResultSet resultSet = statement.executeQuery()) {
+			}
+		}
+
+		// Add the genres
+		for (String genre : genres) {
+			try (PreparedStatement statement = conn
+					.prepareStatement("CALL p_add_song_genre(" + songId + ", '"
+							+ genre + "')");
+					ResultSet resultSet = statement.executeQuery()) {
+			}
+		}
+	}
+
+	public void addTrack(String trackName, Integer trackNumber,
+			String albumName, String albumReleaseDate, List<String> artists,
+			List<String> ftArtists, List<String> genres, String lyricsFilePath,
+			String audioSampleFilePath, Integer trackLengthSeconds)
+			throws SQLException {
+		// Lyrics filepath
+		String lyricsFilePathToUse = lyricsFilePath;
+		if (!lyricsFilePathToUse.equalsIgnoreCase("NULL")) {
+			lyricsFilePathToUse = "\"" + lyricsFilePathToUse + "\"";
+		}
+		// Audio sample filepath
+		String audioSampleFilePathToUse = audioSampleFilePath;
+		if (!audioSampleFilePathToUse.equalsIgnoreCase("NULL")) {
+			audioSampleFilePathToUse = "\"" + audioSampleFilePathToUse + "\"";
+		}
+
+		int albumId = getAlbumId(albumName, albumReleaseDate);
+		Integer songId = null;
+		// Add the base song information
+		String strStmt = "CALL p_add_basic_song(\"" + trackName + "\", "
+				+ trackNumber + ", " + albumId + ", " + trackLengthSeconds
+				+ ", " + lyricsFilePathToUse + ", " + audioSampleFilePathToUse
+				+ ")";
+		try (PreparedStatement statement = conn.prepareStatement(strStmt);
+				ResultSet resultSet = statement.executeQuery()) {
+			resultSet.next();
+			songId = resultSet.getInt(1);
+		}
+
+		// Add the artists
+		for (String artist : artists) {
+			try (PreparedStatement statement = conn
+					.prepareStatement("CALL p_add_song_artist(" + songId
+							+ ", '" + artist + "')");
+					ResultSet resultSet = statement.executeQuery()) {
+			}
+		}
+
+		// Add the ft artists
+		for (String ftArtist : ftArtists) {
+			try (PreparedStatement statement = conn
+					.prepareStatement("CALL p_add_song_ft_artist(" + songId
+							+ ", '" + ftArtist + "')");
+					ResultSet resultSet = statement.executeQuery()) {
+			}
+		}
+
+		// Add the genres
+		for (String genre : genres) {
+			try (PreparedStatement statement = conn
+					.prepareStatement("CALL p_add_song_genre(" + songId + ", '"
+							+ genre + "')");
+					ResultSet resultSet = statement.executeQuery()) {
+			}
+		}
+
+	}
+
+	public boolean doesArtistExist(String newArtist) throws SQLException {
+		CallableStatement cStmt = conn
+				.prepareCall("{? = call f_does_artist_exist(?)}");
+		cStmt.registerOutParameter(1, java.sql.Types.BOOLEAN);
+		cStmt.setString(2, newArtist);
+		cStmt.execute();
+		Boolean outputValue = cStmt.getBoolean(1);
+
+		return outputValue;
+	}
+
+	public boolean doesGenreExist(String newGenre) throws SQLException {
+
+		CallableStatement cStmt = conn
+				.prepareCall("{? = call f_does_genre_exist(?)}");
+		cStmt.registerOutParameter(1, java.sql.Types.BOOLEAN);
+		cStmt.setString(2, newGenre);
+		cStmt.execute();
+		Boolean outputValue = cStmt.getBoolean(1);
+
+		return outputValue;
+	}
+
+	public boolean doesStoreExist(String newValue) throws SQLException {
+		CallableStatement cStmt = conn
+				.prepareCall("{? = call f_does_store_exist(?)}");
+		cStmt.registerOutParameter(1, java.sql.Types.BOOLEAN);
+		cStmt.setString(2, newValue);
+		cStmt.execute();
+		Boolean outputValue = cStmt.getBoolean(1);
+
+		return outputValue;
+	}
+
+	public boolean doesFormatExist(String newValue) throws SQLException {
+		CallableStatement cStmt = conn
+				.prepareCall("{? = call f_does_music_format_exist(?)}");
+		cStmt.registerOutParameter(1, java.sql.Types.BOOLEAN);
+		cStmt.setString(2, newValue);
+		cStmt.execute();
+		Boolean outputValue = cStmt.getBoolean(1);
+
+		return outputValue;
 	}
 }
