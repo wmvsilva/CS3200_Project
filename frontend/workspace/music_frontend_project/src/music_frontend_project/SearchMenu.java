@@ -1,5 +1,6 @@
 package music_frontend_project;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -41,6 +42,7 @@ public class SearchMenu {
 				Printer.info("" + count + ". " + searchedArtists.get(i));
 				count++;
 			}
+			Printer.infoln();
 		}
 		int countAfterArtists = count;
 
@@ -52,8 +54,8 @@ public class SearchMenu {
 						+ curr.getValue1());
 				count++;
 			}
+			Printer.infoln();
 		}
-
 		int countAfterAlbums = count;
 
 		if (!searchedSongs.isEmpty()) {
@@ -64,8 +66,8 @@ public class SearchMenu {
 						+ curr.getValue1());
 				count++;
 			}
+			Printer.infoln();
 		}
-		Printer.infoln();
 
 		int userPick = UserInteraction.provideUserPick(searchedArtists.size()
 				+ searchedAlbums.size() + searchedSongs.size(),
@@ -270,10 +272,7 @@ public class SearchMenu {
 		case (3):
 			// Show Lyrics
 			String lyricFilepath = baseSongInfo.getValue4();
-			byte[] encoded = Files.readAllBytes(Paths.get(lyricFilepath));
-			String lyrics = new String(encoded, Charset.defaultCharset());
-			Printer.info("[Lyrics]");
-			Printer.info(lyrics);
+			printLyrics(lyricFilepath);
 			viewSong(trackId);
 			break;
 		case (4):
@@ -296,6 +295,7 @@ public class SearchMenu {
 			// Delete
 			dbConn.deleteSong(trackId);
 			Printer.info("Song deleted.");
+			Printer.infoln();
 			mainMenu();
 			break;
 		case (8):
@@ -339,7 +339,9 @@ public class SearchMenu {
 				ftArtistsDelim += ",";
 			}
 		}
-		Printer.info("Ft Artists: " + ftArtistsDelim);
+		if (ftArtists.size() > 0) {
+			Printer.info("Ft Artists: " + ftArtistsDelim);
+		}
 		// Genres
 		String genreDelim = "";
 		for (int i = 0; i < genres.size(); i++) {
@@ -349,6 +351,7 @@ public class SearchMenu {
 			}
 		}
 		Printer.info("Genres: " + genreDelim);
+		Printer.infoln();
 
 		// Show menu
 		UserInteraction.printOptions("Show Album", "Show Artist",
@@ -361,10 +364,12 @@ public class SearchMenu {
 			viewAlbum(baseSongInfo.getValue3());
 			break;
 		case (1):
+			Printer.info("[Artists of this song]");
 			// Show Artist
 			for (int i = 0; i < artists.size(); i++) {
 				Printer.info("" + i + ". " + artists.get(i));
 			}
+			Printer.infoln();
 			int artistChoice = UserInteraction
 					.provideUserPick(artists.size() - 1);
 			viewArtist(artists.get(artistChoice));
@@ -373,12 +378,15 @@ public class SearchMenu {
 			// Show Ft Artist
 			if (ftArtists.isEmpty()) {
 				Printer.info("There are no featured artists.");
+				Printer.infoln();
 				viewSong(trackId);
 				return;
 			}
+			Printer.info("[Featured Artists of this song]");
 			for (int i = 0; i < ftArtists.size(); i++) {
 				Printer.info("" + i + ". " + ftArtists.get(i));
 			}
+			Printer.infoln();
 			int ftArtistChoice = UserInteraction.provideUserPick(ftArtists
 					.size() - 1);
 			viewArtist(ftArtists.get(ftArtistChoice));
@@ -386,10 +394,7 @@ public class SearchMenu {
 		case (3):
 			// Show Lyrics
 			String lyricFilepath = baseSongInfo.getValue4();
-			byte[] encoded = Files.readAllBytes(Paths.get(lyricFilepath));
-			String lyrics = new String(encoded, Charset.defaultCharset());
-			Printer.info("[Lyrics]");
-			Printer.info(lyrics);
+			printLyrics(lyricFilepath);
 			viewSong(trackId);
 			break;
 		case (4):
@@ -406,6 +411,7 @@ public class SearchMenu {
 			// Delete
 			dbConn.deleteSong(trackId);
 			Printer.info("Song deleted.");
+			Printer.infoln();
 			mainMenu();
 			break;
 		case (7):
@@ -416,15 +422,43 @@ public class SearchMenu {
 
 	}
 
+	private void printLyrics(String lyricFileName) throws IOException {
+		if (lyricFileName == null) {
+			Printer.err("This song has no lyrics listed.");
+			Printer.infoln();
+			return;
+		}
+
+		String filePath = "./resources/lyrics/" + lyricFileName;
+		File f = new File(filePath);
+		if (!f.exists() || f.isDirectory()) {
+			Printer.err("Could not find file " + filePath);
+			Printer.infoln();
+			return;
+		}
+
+		byte[] encoded = Files.readAllBytes(Paths.get(filePath));
+		String lyrics = new String(encoded, Charset.defaultCharset());
+		Printer.info("[Lyrics]");
+		Printer.info(lyrics);
+		Printer.infoln();
+	}
+
 	private void viewArtist(String artist) throws SQLException, IOException {
 		// Album, album id
 		List<Pair<String, Integer>> albumsByArtist = dbConn
 				.getAlbumsByArtist(artist);
 		Printer.info("Artist Name: " + artist);
-		for (Pair<String, Integer> p : albumsByArtist) {
-			Printer.info(p.getValue0());
+		String albumDelimited = "Albums: ";
+		for (int i = 0; i < albumsByArtist.size(); i++) {
+			Pair<String, Integer> p = albumsByArtist.get(i);
+			albumDelimited += p.getValue0();
+			if (i != albumsByArtist.size() - 1) {
+				albumDelimited += ",";
+			}
 		}
-		Printer.info("");
+		Printer.info(albumDelimited);
+		Printer.infoln();
 		UserInteraction.printOptions("View Album", "Modify", "Delete",
 				"Main Menu");
 		Integer choice = UserInteraction.provideUserPick(3);
@@ -456,5 +490,4 @@ public class SearchMenu {
 			break;
 		}
 	}
-
 }

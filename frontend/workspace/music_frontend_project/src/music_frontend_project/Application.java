@@ -135,6 +135,7 @@ public class Application {
 	public void run() {
 		printDatabaseConfig();
 		connectToDBOrExit();
+		Printer.info("Welcome to the Music Database!");
 		userMenus(dbConn);
 		exit(0);
 	}
@@ -181,6 +182,7 @@ public class Application {
 		Printer.debug("Server Name: " + getServerName());
 		Printer.debug("Port Number: " + getPortNumber());
 		Printer.debug("Username: " + getUsername());
+		Printer.debug("");
 	}
 
 }

@@ -56,9 +56,10 @@ public class ModifyMenu {
 		Printer.info("" + count + ". Release Date: "
 				+ singleSongInfo.getValue0());
 
+		Printer.infoln();
 		int userInput = UserInteraction.provideUserPick(4 + artists.size()
 				+ ftArtists.size() + genres.size(),
-				"Enter number to modify or 0 to go back:");
+				"Enter a number to modify or 0 to go back:");
 
 		if (userInput == 0) {
 			viewSong(trackId);
@@ -79,11 +80,23 @@ public class ModifyMenu {
 			Printer.info("Enter the new album name:");
 			String newAlbum = UserInteraction.getUserInput();
 			List<String> releaseDates = dbConn.getReleaseDatesOfAlbum(newAlbum);
+			if (releaseDates.isEmpty()) {
+				Printer.err("Found no albums with name " + newAlbum);
+				modifySingleSong(trackId);
+				return;
+			}
 			for (String date : releaseDates) {
 				Printer.info(newAlbum + " - " + date);
 			}
 			Printer.info("Enter the new album release date:");
-			String newReleaseDate = UserInteraction.getUserInput();
+			String newReleaseDate = null;
+			while (newReleaseDate == null) {
+				String userDateInput = UserInteraction.getUserInput();
+				if (releaseDates.contains(userDateInput)) {
+					newReleaseDate = userDateInput;
+				}
+				Printer.info("Please enter a valid date from one of the above albums:");
+			}
 			dbConn.modifySongAlbum(trackId, newAlbum, newReleaseDate);
 			viewSong(trackId);
 			return;
@@ -91,7 +104,7 @@ public class ModifyMenu {
 			Printer.info("Enter a value:");
 			String newArtist = UserInteraction.getUserInput();
 			String oldArtist = artists.get(userInput - 4);
-			dbConn.modifySongArtist(trackId, oldArtist, newArtist);
+			modifySongArtist(trackId, oldArtist, newArtist);
 			viewSong(trackId);
 			return;
 		} else if (userInput < countAfterFtArtist) {
@@ -106,7 +119,7 @@ public class ModifyMenu {
 			String newGenre = UserInteraction.getUserInput();
 			String oldGenre = genres.get(userInput - 4 - artists.size()
 					- ftArtists.size());
-			dbConn.modifySongGenre(trackId, oldGenre, newGenre);
+			modifySongGenre(trackId, oldGenre, newGenre);
 			viewSong(trackId);
 			return;
 		} else {
@@ -116,6 +129,25 @@ public class ModifyMenu {
 			viewSong(trackId);
 			return;
 		}
+	}
+
+	private void modifySongGenre(int trackId, String oldGenre, String newGenre)
+			throws SQLException {
+		if (!dbConn.doesGenreExist(trackId, oldGenre, newGenre)) {
+			Printer.err("Genre " + newGenre + " does not exist.");
+			Printer.err("");
+			return;
+		}
+		dbConn.modifySongGenre(trackId, oldGenre, newGenre);
+	}
+
+	private void modifySongArtist(int trackId, String oldArtist,
+			String newArtist) throws SQLException, IOException {
+		if (!dbConn.doesArtistExist(newArtist)) {
+			Printer.err("Artist " + newArtist + " does not exist.");
+			viewSong(trackId);
+		}
+		dbConn.modifySongArtist(trackId, oldArtist, newArtist);
 	}
 
 	void modifyGeneralSong(int trackId) throws SQLException, IOException {
@@ -152,6 +184,7 @@ public class ModifyMenu {
 			Printer.info("" + count + ". Genre: " + genres.get(i));
 			count++;
 		}
+		Printer.infoln();
 
 		int userInput = UserInteraction.provideUserPick(3 + artists.size()
 				+ ftArtists.size() + genres.size(),
@@ -176,11 +209,23 @@ public class ModifyMenu {
 			Printer.info("Enter the new album name:");
 			String newAlbum = UserInteraction.getUserInput();
 			List<String> releaseDates = dbConn.getReleaseDatesOfAlbum(newAlbum);
+			if (releaseDates.isEmpty()) {
+				Printer.err("Found no albums with name " + newAlbum);
+				modifyGeneralSong(trackId);
+				return;
+			}
 			for (String date : releaseDates) {
 				Printer.info(newAlbum + " - " + date);
 			}
 			Printer.info("Enter the new album release date:");
-			String newReleaseDate = UserInteraction.getUserInput();
+			String newReleaseDate = null;
+			while (newReleaseDate == null) {
+				String userDateInput = UserInteraction.getUserInput();
+				if (releaseDates.contains(userDateInput)) {
+					newReleaseDate = userDateInput;
+				}
+				Printer.info("Please enter a valid date from one of the above albums:");
+			}
 			dbConn.modifySongAlbum(trackId, newAlbum, newReleaseDate);
 			viewSong(trackId);
 			return;
@@ -188,7 +233,7 @@ public class ModifyMenu {
 			Printer.info("Enter a value:");
 			String newArtist = UserInteraction.getUserInput();
 			String oldArtist = artists.get(userInput - 4);
-			dbConn.modifySongArtist(trackId, oldArtist, newArtist);
+			modifySongArtist(trackId, oldArtist, newArtist);
 			viewSong(trackId);
 			return;
 		} else if (userInput < countAfterFtArtist) {
@@ -203,7 +248,7 @@ public class ModifyMenu {
 			String newGenre = UserInteraction.getUserInput();
 			String oldGenre = genres.get(userInput - 4 - artists.size()
 					- ftArtists.size());
-			dbConn.modifySongGenre(trackId, oldGenre, newGenre);
+			modifySongGenre(trackId, oldGenre, newGenre);
 			viewSong(trackId);
 			return;
 		}

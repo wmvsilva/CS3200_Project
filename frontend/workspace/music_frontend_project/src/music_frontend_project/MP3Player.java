@@ -15,6 +15,11 @@ public final class MP3Player {
 	static final String SEARCH_PATH = "./resources/audio_samples/";
 
 	public static void playAudio(String fileName) throws IOException {
+		if (fileName == null) {
+			Printer.err("This song has no audio sample.");
+			return;
+		}
+
 		String filePath = SEARCH_PATH + fileName;
 		File f = new File(filePath);
 		if (!f.exists() || f.isDirectory()) {

@@ -24,3 +24,39 @@ BEGIN
     RETURN is_exist;
 END //
 DELIMITER ;
+
+DROP FUNCTION IF EXISTS f_does_artist_exist;
+DELIMITER //
+CREATE FUNCTION f_does_artist_exist(given_artist_name VARCHAR(45)) 
+	RETURNS BOOL
+BEGIN
+	DECLARE is_exist BOOL;
+    SET is_exist = 0;
+    SELECT EXISTS(
+		SELECT 
+			* 
+		FROM 
+			artist
+		WHERE artist_name = given_artist_name) 
+			INTO is_exist ;
+    RETURN is_exist;
+END //
+DELIMITER ;
+
+DROP FUNCTION IF EXISTS f_does_genre_exist;
+DELIMITER //
+CREATE FUNCTION f_does_genre_exist(given_genre_name VARCHAR(45)) 
+	RETURNS BOOL
+BEGIN
+	DECLARE is_exist BOOL;
+    SET is_exist = 0;
+    SELECT EXISTS(
+		SELECT 
+			* 
+		FROM 
+			genre
+		WHERE genre_name = given_genre_name) 
+			INTO is_exist ;
+    RETURN is_exist;
+END //
+DELIMITER ;

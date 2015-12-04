@@ -656,4 +656,28 @@ public class DBConnector {
 		}
 
 	}
+
+	public boolean doesArtistExist(String newArtist) throws SQLException {
+		CallableStatement cStmt = conn
+				.prepareCall("{? = call f_does_artist_exist(?)}");
+		cStmt.registerOutParameter(1, java.sql.Types.BOOLEAN);
+		cStmt.setString(2, newArtist);
+		cStmt.execute();
+		Boolean outputValue = cStmt.getBoolean(1);
+
+		return outputValue;
+	}
+
+	public boolean doesGenreExist(int trackId, String oldGenre, String newGenre)
+			throws SQLException {
+
+		CallableStatement cStmt = conn
+				.prepareCall("{? = call f_does_genre_exist(?)}");
+		cStmt.registerOutParameter(1, java.sql.Types.BOOLEAN);
+		cStmt.setString(2, newGenre);
+		cStmt.execute();
+		Boolean outputValue = cStmt.getBoolean(1);
+
+		return outputValue;
+	}
 }

@@ -16,7 +16,7 @@ public class UserInteraction {
 	}
 
 	static Integer provideUserPick(int maxPick) throws IOException {
-		return provideUserPick(maxPick, "Pick an option:");
+		return provideUserPick(maxPick, "Enter an option:");
 	}
 
 	static Integer provideUserPick(int maxPick, String question)
