@@ -7,6 +7,8 @@ CS 3200
 MySQL Database Functions for Final Project
 */
 
+/* Is the given song a Single?
+ */
 DROP FUNCTION IF EXISTS f_is_song_single;
 DELIMITER //
 CREATE FUNCTION f_is_song_single(given_track_id INT) 
@@ -25,9 +27,11 @@ BEGIN
 END //
 DELIMITER ;
 
+/* Does the artist with the given name exist in the database?
+ */
 DROP FUNCTION IF EXISTS f_does_artist_exist;
 DELIMITER //
-CREATE FUNCTION f_does_artist_exist(given_artist_name VARCHAR(45)) 
+CREATE FUNCTION f_does_artist_exist(given_artist_name VARCHAR(70)) 
 	RETURNS BOOL
 BEGIN
 	DECLARE is_exist BOOL;
@@ -43,9 +47,11 @@ BEGIN
 END //
 DELIMITER ;
 
+/* Does a genre with the given name exist within the database?
+ */
 DROP FUNCTION IF EXISTS f_does_genre_exist;
 DELIMITER //
-CREATE FUNCTION f_does_genre_exist(given_genre_name VARCHAR(45)) 
+CREATE FUNCTION f_does_genre_exist(given_genre_name VARCHAR(70)) 
 	RETURNS BOOL
 BEGIN
 	DECLARE is_exist BOOL;
@@ -61,10 +67,11 @@ BEGIN
 END //
 DELIMITER ;
 
--- f_does_store_exist
+/* Does a store with the given name exist within the database?
+ */
 DROP FUNCTION IF EXISTS f_does_store_exist;
 DELIMITER //
-CREATE FUNCTION f_does_store_exist(given_store_name VARCHAR(45)) 
+CREATE FUNCTION f_does_store_exist(given_store_name VARCHAR(70)) 
 	RETURNS BOOL
 BEGIN
 	DECLARE is_exist BOOL;
@@ -80,9 +87,11 @@ BEGIN
 END //
 DELIMITER ;
 
+/* Does a music format with the given name exist within the database?
+ */
 DROP FUNCTION IF EXISTS f_does_music_format_exist;
 DELIMITER //
-CREATE FUNCTION f_does_music_format_exist(given_format_name VARCHAR(45)) 
+CREATE FUNCTION f_does_music_format_exist(given_format_name VARCHAR(70)) 
 	RETURNS BOOL
 BEGIN
 	DECLARE is_exist BOOL;
