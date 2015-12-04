@@ -266,7 +266,7 @@ public class DBConnector {
 	}
 
 	public void modifyPriceCatalog(Integer albumId, String oldStoreName,
-			Double oldPrice, String oldFormat, String newValue)
+			Double oldPrice, String oldFormat, Double newValue)
 			throws SQLException {
 		try (PreparedStatement statement = conn
 				.prepareStatement("CALL p_modify_album_price_catalog("
@@ -668,13 +668,34 @@ public class DBConnector {
 		return outputValue;
 	}
 
-	public boolean doesGenreExist(int trackId, String oldGenre, String newGenre)
-			throws SQLException {
+	public boolean doesGenreExist(String newGenre) throws SQLException {
 
 		CallableStatement cStmt = conn
 				.prepareCall("{? = call f_does_genre_exist(?)}");
 		cStmt.registerOutParameter(1, java.sql.Types.BOOLEAN);
 		cStmt.setString(2, newGenre);
+		cStmt.execute();
+		Boolean outputValue = cStmt.getBoolean(1);
+
+		return outputValue;
+	}
+
+	public boolean doesStoreExist(String newValue) throws SQLException {
+		CallableStatement cStmt = conn
+				.prepareCall("{? = call f_does_store_exist(?)}");
+		cStmt.registerOutParameter(1, java.sql.Types.BOOLEAN);
+		cStmt.setString(2, newValue);
+		cStmt.execute();
+		Boolean outputValue = cStmt.getBoolean(1);
+
+		return outputValue;
+	}
+
+	public boolean doesFormatExist(String newValue) throws SQLException {
+		CallableStatement cStmt = conn
+				.prepareCall("{? = call f_does_music_format_exist(?)}");
+		cStmt.registerOutParameter(1, java.sql.Types.BOOLEAN);
+		cStmt.setString(2, newValue);
 		cStmt.execute();
 		Boolean outputValue = cStmt.getBoolean(1);
 

@@ -112,47 +112,64 @@ public class SearchMenu {
 
 		String genresDelimited = "";
 		for (int i = 0; i < genres.size(); i++) {
-			artistsDelimited += genres.get(i);
+			genresDelimited += genres.get(i);
 			if (i != genres.size() - 1) {
 				genresDelimited += ", ";
 			}
 		}
-		Printer.info(genresDelimited);
+		Printer.info("Genres: " + genresDelimited);
 
 		Printer.info("Release Date: " + albumInfo.getValue1());
 
 		Printer.info("");
 
-		for (Pair<String, Integer> track : tracks) {
-			Printer.info(track.getValue0());
+		if (!tracks.isEmpty()) {
+			Printer.info("[Tracks]");
+			for (Pair<String, Integer> track : tracks) {
+				Printer.info(track.getValue0());
+			}
+			Printer.info("");
 		}
-		Printer.info("");
 
+		Printer.info("[Purchase Options]");
 		for (Triplet<String, Double, String> storeInfo : albumStoreInfo) {
 			Printer.info("Store: " + storeInfo.getValue0());
 			Printer.info("Price: " + storeInfo.getValue1());
 			Printer.info("Format: " + storeInfo.getValue2());
+			Printer.infoln();
 		}
+		Printer.infoln();
 
 		UserInteraction.printOptions("View Song", "View Artist",
 				"Show Album Art", "Modify", "Delete", "Main Menu");
+		Printer.infoln();
 		Integer choice = UserInteraction.provideUserPick(5);
 		switch (choice) {
 		case (0):
+			if (tracks.isEmpty()) {
+				Printer.info("Album contains no songs.");
+				viewAlbum(albumId);
+				return;
+			}
+			Printer.info("[Tracks]");
 			for (int i = 0; i < tracks.size(); i++) {
 				String trackName = tracks.get(i).getValue0();
 				Printer.info("" + i + ". " + trackName);
 			}
+			Printer.infoln();
 			Integer trackChoice = UserInteraction
 					.provideUserPick(tracks.size() - 1);
 			int trackId = tracks.get(trackChoice).getValue1();
 			viewSong(trackId);
 			break;
 		case (1):
+			Printer.info("[Artists]");
 			for (int i = 0; i < artists.size(); i++) {
 				String artistName = artists.get(i);
 				Printer.info("" + i + ". " + artistName);
 			}
+			Printer.infoln();
+
 			Integer artistChoice = UserInteraction.provideUserPick(artists
 					.size() - 1);
 			String artistName = artists.get(artistChoice);
@@ -160,7 +177,7 @@ public class SearchMenu {
 			break;
 		case (2):
 			String albumFilePath = albumInfo.getValue2();
-			ImageViewer.viewImage(albumFilePath);
+			ImageViewer.viewAlbumCoverArtImage(albumFilePath);
 			viewAlbum(albumId);
 			break;
 		case (3):

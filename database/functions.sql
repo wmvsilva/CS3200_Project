@@ -60,3 +60,40 @@ BEGIN
     RETURN is_exist;
 END //
 DELIMITER ;
+
+-- f_does_store_exist
+DROP FUNCTION IF EXISTS f_does_store_exist;
+DELIMITER //
+CREATE FUNCTION f_does_store_exist(given_store_name VARCHAR(45)) 
+	RETURNS BOOL
+BEGIN
+	DECLARE is_exist BOOL;
+    SET is_exist = 0;
+    SELECT EXISTS(
+		SELECT 
+			* 
+		FROM 
+			store
+		WHERE store_name = given_store_name) 
+			INTO is_exist ;
+    RETURN is_exist;
+END //
+DELIMITER ;
+
+DROP FUNCTION IF EXISTS f_does_music_format_exist;
+DELIMITER //
+CREATE FUNCTION f_does_music_format_exist(given_format_name VARCHAR(45)) 
+	RETURNS BOOL
+BEGIN
+	DECLARE is_exist BOOL;
+    SET is_exist = 0;
+    SELECT EXISTS(
+		SELECT 
+			* 
+		FROM 
+			music_format
+		WHERE format_name = given_format_name) 
+			INTO is_exist ;
+    RETURN is_exist;
+END //
+DELIMITER ;

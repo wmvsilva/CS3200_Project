@@ -46,4 +46,17 @@ public class UserInteraction {
 		}
 	}
 
+	public static double getPriceFromUser(String newValue) throws IOException {
+		Double result = null;
+		try {
+			result = Double.parseDouble(newValue);
+		} catch (NumberFormatException e) {
+			Printer.err("Please enter a valid price:");
+			newValue = getUserInput();
+			return getPriceFromUser(newValue);
+		}
+		return result;
+
+	}
+
 }

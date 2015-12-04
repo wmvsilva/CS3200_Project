@@ -157,7 +157,7 @@ public class ModifyMenu {
 
 	private void modifySongGenre(int trackId, String oldGenre, String newGenre)
 			throws SQLException {
-		if (!dbConn.doesGenreExist(trackId, oldGenre, newGenre)) {
+		if (!dbConn.doesGenreExist(newGenre)) {
 			Printer.err("Genre " + newGenre + " does not exist.");
 			Printer.err("");
 			return;
@@ -315,65 +315,99 @@ public class ModifyMenu {
 			Printer.info("" + count + ". Format: " + triplet.getValue2());
 			count++;
 		}
+		Printer.infoln();
 
 		int userInput = UserInteraction.provideUserPick(1 + 2 + artists.size()
 				+ genres.size() + 3 * albumStoreInfo.size(),
 				"Enter number to modify or 0 to go back:");
 		if (userInput == 0) {
+			// Go back
 			viewAlbum(albumId);
 			return;
 		} else if (userInput == 1) {
-			Printer.info("Enter a new value:");
+			// Album Name
+			Printer.info("Enter a new album name:");
 			String newAlbumName = UserInteraction.getUserInput();
 			dbConn.modifyAlbumName(albumId, newAlbumName);
 			viewAlbum(albumId);
 			return;
 		} else if (userInput == 2) {
-			Printer.info("Enter a new value:");
+			// Album release date
+			Printer.info("Enter a new album release date in the form yyyy-mm-dd:");
 			String newReleaseDate = UserInteraction.getUserInput();
+			while (!Utility.isValidDate(newReleaseDate)) {
+				Printer.info("Please enter a valid date:");
+				newReleaseDate = UserInteraction.getUserInput();
+			}
 			dbConn.modifyAlbumReleaseDate(albumId, newReleaseDate);
 			viewAlbum(albumId);
 			return;
 		} else if (userInput < countAfterArtist) {
+			// Album artist
 			Printer.info("Enter a new value:");
 			String newArtistName = UserInteraction.getUserInput();
 			String oldArtistName = artists.get(userInput - 3);
+			if (!dbConn.doesArtistExist(newArtistName)) {
+				Printer.err("Arist " + newArtistName + " is not in database.");
+				viewAlbum(albumId);
+				return;
+			}
 			dbConn.modifyAlbumArtist(albumId, oldArtistName, newArtistName);
 			viewAlbum(albumId);
 			return;
 		} else if (userInput < countAfterGenre) {
-			Printer.info("Enter a new value:");
+			// Album genre
+			Printer.info("Enter a new genre value:");
 			String newGenreName = UserInteraction.getUserInput();
 			String oldGenreName = genres.get(userInput - 3 - artists.size());
+			if (!dbConn.doesGenreExist(newGenreName)) {
+				Printer.err("Genre " + newGenreName
+						+ " does not exist in database.");
+				Printer.infoln();
+				viewAlbum(albumId);
+				return;
+			}
 			dbConn.modifyAlbumGenre(albumId, oldGenreName, newGenreName);
 			Printer.info("Modifed genre " + oldGenreName + " to genre "
 					+ newGenreName + ".");
 			viewAlbum(albumId);
 			return;
 		} else {
+			// Store, Price, Format
 			Printer.info("Enter a new value:");
 			String newValue = UserInteraction.getUserInput();
 			int howFarIntoList = userInput - 2 - artists.size() - genres.size();
-			Printer.info("howFarIntoList: " + howFarIntoList);
 			int whichTriplet = (int) Math.ceil((double) howFarIntoList / 3.0) - 1;
 			Triplet<String, Double, String> triplet = albumStoreInfo
 					.get(whichTriplet);
 			int whichEntity = howFarIntoList % 3;
-			Printer.info("Entity is " + whichEntity);
 
 			String oldStoreName = triplet.getValue0();
 			Double oldPrice = triplet.getValue1();
 			String oldFormat = triplet.getValue2();
 			// Store
 			if (whichEntity == 1) {
+				if (!dbConn.doesStoreExist(newValue)) {
+					Printer.err("Store " + newValue + " does not exist.");
+					Printer.infoln();
+					viewAlbum(albumId);
+					return;
+				}
 				dbConn.modifyAlbumStoreCatalog(albumId, oldStoreName, oldPrice,
 						oldFormat, newValue);
 			} else if (whichEntity == 2) {
 				// Price
+				double newPrice = UserInteraction.getPriceFromUser(newValue);
 				dbConn.modifyPriceCatalog(albumId, oldStoreName, oldPrice,
-						oldFormat, newValue);
+						oldFormat, newPrice);
 			} else {
 				// Format
+				if (!dbConn.doesFormatExist(newValue)) {
+					Printer.err("Format " + newValue + " does not exist.");
+					Printer.infoln();
+					viewAlbum(albumId);
+					return;
+				}
 				dbConn.modifyFormatCatalog(albumId, oldStoreName, oldPrice,
 						oldFormat, newValue);
 			}
