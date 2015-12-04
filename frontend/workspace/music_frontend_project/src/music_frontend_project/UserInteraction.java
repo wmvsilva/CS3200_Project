@@ -64,4 +64,30 @@ public class UserInteraction {
 
 	}
 
+	public static Integer getPositiveIntFromUser() throws IOException {
+		String input = getUserInput();
+		Integer result = null;
+		try {
+			result = Integer.parseInt(input);
+		} catch (NumberFormatException e) {
+			Printer.err("Number was not entered. Please enter an integer: ");
+			return getPositiveIntFromUser();
+		}
+
+		if (result <= 0) {
+			Printer.info("Please enter a positive integer:");
+			return getPositiveIntFromUser();
+		}
+
+		return result;
+	}
+
+	public static String getDateFromUser() throws IOException {
+		String input = getUserInput();
+		while (!Utility.isValidDate(input)) {
+			Printer.err("Please enter a date in the format yyyy-mm-dd:");
+			input = getUserInput();
+		}
+		return input;
+	}
 }

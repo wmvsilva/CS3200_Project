@@ -555,11 +555,26 @@ public class DBConnector {
 		return result;
 	}
 
-	public void addSingle(String trackName, String trackNumber,
+	public void addSingle(String trackName, Integer trackNumber,
 			String albumName, String albumReleaseDate, List<String> artists,
 			List<String> ftArtists, List<String> genres, String lyricsFilePath,
 			String audioSampleFilePath, String releaseDate, String coverArt,
-			String trackLengthSeconds) throws SQLException {
+			Integer trackLengthSeconds) throws SQLException {
+		// Lyrics filepath
+		String lyricsFilePathToUse = lyricsFilePath;
+		if (!lyricsFilePathToUse.equalsIgnoreCase("NULL")) {
+			lyricsFilePathToUse = "\"" + lyricsFilePathToUse + "\"";
+		}
+		// Audio sample filepath
+		String audioSampleFilePathToUse = audioSampleFilePath;
+		if (!audioSampleFilePathToUse.equalsIgnoreCase("NULL")) {
+			audioSampleFilePathToUse = "\"" + audioSampleFilePathToUse + "\"";
+		}
+		// Cover Art to use
+		String coverArtToUse = coverArt;
+		if (!coverArtToUse.equalsIgnoreCase("NULL")) {
+			coverArtToUse = "\"" + coverArtToUse + "\"";
+		}
 
 		int albumId = getAlbumId(albumName, albumReleaseDate);
 		Integer songId = null;
@@ -567,8 +582,8 @@ public class DBConnector {
 		try (PreparedStatement statement = conn
 				.prepareStatement("CALL p_add_basic_song(\"" + trackName
 						+ "\", " + trackNumber + ", " + albumId + ", "
-						+ trackLengthSeconds + ", \"" + lyricsFilePath
-						+ "\", \"" + audioSampleFilePath + "\")");
+						+ trackLengthSeconds + ", " + lyricsFilePathToUse
+						+ ", " + audioSampleFilePathToUse + ")");
 				ResultSet resultSet = statement.executeQuery()) {
 			resultSet.next();
 			songId = resultSet.getInt(1);
@@ -577,7 +592,7 @@ public class DBConnector {
 		// Add the single song information
 		try (PreparedStatement statement = conn
 				.prepareStatement("CALL p_add_single_song(" + songId + ", '"
-						+ releaseDate + "', '" + coverArt + "')");
+						+ releaseDate + "', " + coverArtToUse + ")");
 				ResultSet resultSet = statement.executeQuery()) {
 		}
 
@@ -609,19 +624,29 @@ public class DBConnector {
 		}
 	}
 
-	public void addTrack(String trackName, String trackNumber,
+	public void addTrack(String trackName, Integer trackNumber,
 			String albumName, String albumReleaseDate, List<String> artists,
 			List<String> ftArtists, List<String> genres, String lyricsFilePath,
-			String audioSampleFilePath, String trackLengthSeconds)
+			String audioSampleFilePath, Integer trackLengthSeconds)
 			throws SQLException {
+		// Lyrics filepath
+		String lyricsFilePathToUse = lyricsFilePath;
+		if (!lyricsFilePathToUse.equalsIgnoreCase("NULL")) {
+			lyricsFilePathToUse = "\"" + lyricsFilePathToUse + "\"";
+		}
+		// Audio sample filepath
+		String audioSampleFilePathToUse = audioSampleFilePath;
+		if (!audioSampleFilePathToUse.equalsIgnoreCase("NULL")) {
+			audioSampleFilePathToUse = "\"" + audioSampleFilePathToUse + "\"";
+		}
 
 		int albumId = getAlbumId(albumName, albumReleaseDate);
 		Integer songId = null;
 		// Add the base song information
 		String strStmt = "CALL p_add_basic_song(\"" + trackName + "\", "
 				+ trackNumber + ", " + albumId + ", " + trackLengthSeconds
-				+ ", \"" + lyricsFilePath + "\", \"" + audioSampleFilePath
-				+ "\")";
+				+ ", " + lyricsFilePathToUse + ", " + audioSampleFilePathToUse
+				+ ")";
 		try (PreparedStatement statement = conn.prepareStatement(strStmt);
 				ResultSet resultSet = statement.executeQuery()) {
 			resultSet.next();
