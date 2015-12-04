@@ -5,6 +5,10 @@ CS 3200
 7 December 2015
 
 MySQL Database Schema for Final Project
+
+Note that we have secondary indexes in the forms of UNIQUE KEYS.
+Additionally, we have extra constraints on fields that are not
+part of the key such as the use of NOT NULL.
 */
 
 CREATE DATABASE IF NOT EXISTS music /*!40100 DEFAULT CHARACTER SET utf8 */;
@@ -54,6 +58,9 @@ CREATE TABLE album
 	PRIMARY KEY ( album_id ),
     
     # The album's name and release date should uniquely identify it
+    # Because we will be searching for albums by name, we should index
+    # this field. Additionally, we will be retrieving albums by their
+    # release date. This is a good case for a secondary index like this.
     CONSTRAINT
 		uk_album_album_name_release_date
 	UNIQUE KEY ( album_name, release_date )
@@ -90,6 +97,10 @@ CREATE TABLE general_song
     PRIMARY KEY ( song_id ),
     
     # Each track within an album will have a unique name
+    # We will be searching for tracks by name and will be
+    # determining all tracks for specific albums.
+    # This means we should index this field.
+    # a UNIQUE KEY
 	CONSTRAINT
 		uk_general_song_track_name_album_id
 	UNIQUE KEY ( track_name, album_id ),
@@ -456,6 +467,9 @@ CREATE TABLE format_of_album
     PRIMARY KEY ( distribution_id ),
     
     # Album id and format name are a composite key
+    # Also, adding this field as a secondary index
+    # is useful due to several lookups to get
+    # the formats of specific albums.
 	CONSTRAINT
 		uk_format_of_album_album_id_format_name
 	UNIQUE KEY ( album_id, format_name ),
